@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blog.hush.mapper.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.blog.hush.entity.Comment" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="p_id" property="pId" jdbcType="BIGINT" />
+    <result column="c_id" property="cId" jdbcType="BIGINT" />
+    <result column="article_title" property="articleTitle" jdbcType="VARCHAR" />
+    <result column="article_id" property="articleId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="c_name" property="cName" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="BIGINT" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="device" property="device" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <select id="findAll" resultMap="BaseResultMap">
+       SELECT DISTINCT
+          c.content,
+          c.NAME,
+          c.article_id
+      FROM
+          tb_article a,
+          tb_comment c
+      WHERE
+          c.article_id IN ( SELECT id FROM tb_article )
+          AND a.state = #{state} LIMIT #{queryPage.page}, #{queryPage.limit}
+  </select>
+</mapper>

@@ -1,0 +1,2 @@
+# hush
+my blog

@@ -1,2 +1,3 @@
 # hush
-my blog
+个人博客，coding...
+言多必失

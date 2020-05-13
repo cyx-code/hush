@@ -46,3 +46,6 @@ body {
     z-index: 999;
     top: 50%;
 }
+.layui-body {
+    padding-top: 20px;
+}

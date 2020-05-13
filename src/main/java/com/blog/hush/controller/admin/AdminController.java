@@ -9,11 +9,11 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String home() {
-        return "admin/index";
+        return "admin/home";
     }
 
     @GetMapping("/admin/article/write")
     public String writeArticle() {
-        return "admin/article/write";
+        return "admin/article/add";
     }
 }

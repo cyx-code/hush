@@ -78,18 +78,22 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">上传图片</label>
                 <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="test1">封面图</button>
-                    <div class="layui-upload-list">
-                        <img class="layui-upload-img" id="demo1">
-                        <p id="demoText"></p>
-                    </div>
+                    <button type="button" class="layui-btn" id="img">封面图</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片预览</label>
+                <input type="hidden" name="cover" id="cover"/>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="demo1" width="60px" height="60px">
+                    <p id="demoText"></p>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">栏目</label>
                 <div class="layui-input-block">
-                    <select name="city" lay-verify="required">
+                    <select name="category" lay-verify="required">
                         <option value=""></option>
                         <option value="0">北京</option>
                         <option value="1">上海</option>
@@ -162,8 +166,8 @@
 
         //普通图片上传
         var uploadInst = upload.render({
-            elem: '#test1'
-            , url: 'https://httpbin.org/post' //改成您自己的上传接口
+            elem: '#img'
+            , url: '/admin/article/upload' //改成您自己的上传接口
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
@@ -176,6 +180,7 @@
                     return layer.msg('上传失败');
                 }
                 //上传成功
+                $('#cover').val(res.path);
             }
             , error: function () {
                 //演示失败状态，并实现重传

@@ -194,10 +194,10 @@
         //监听提交
         form.on('submit(formDemo)', function(data){
             data.field.tags = tags.getValue();
+            data.field.state = "on" === data.field.state ? "1" : "0";
             axios.post('/api/article/add', data.field).then(response => {
                 console.log(response)
             });
-            layer.msg(JSON.stringify(data.field));
             return false;
         });
     })

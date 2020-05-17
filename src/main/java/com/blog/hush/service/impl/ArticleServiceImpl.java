@@ -109,7 +109,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             Date now = new Date();
             String username = (String) SecurityUtils.getSubject().getPrincipal();
             article.setAuthor("cyx");
-            if ("on".equals(article.getState())) {
+            if ("1".equals(article.getState())) {
                 article.setPublishTime(now);
             }
             article.setEditTime(now);

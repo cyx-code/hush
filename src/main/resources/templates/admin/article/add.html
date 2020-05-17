@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -79,22 +79,21 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">栏目</label>
                     <div class="layui-input-block">
-                        <select name="category" lay-verify="required">
+                        <select name="category" lay-verify="required"  >
                             <option value=""></option>
-                            <option value="0">北京</option>
-                            <option value="1">上海</option>
-                            <option value="2">广州</option>
-                            <option value="3">深圳</option>
-                            <option value="4">杭州</option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}" th:text="${category.name}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">标签</label>
                     <div class="layui-input-block">
-                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标签" autocomplete="off" class="layui-input">
+                        <div id="tags" class="xm-select-demo"></div>
                     </div>
                 </div>
+
+
             </div>
 
 
@@ -132,17 +131,20 @@
                 <label class="layui-form-label">图片预览</label>
                 <input type="hidden" name="cover" id="cover"/>
                 <div class="layui-upload-list">
-                    <img class="layui-upload-img" id="demo1" width="200px" height="200px">
+                    <img class="layui-upload-img" id="imgShow" width="200px" height="200px">
                     <p id="demoText"></p>
                 </div>
             </div>
 
-            <!-- 内容主体区域 -->
-            <div id="layout" class="editor">
-                <div id="test-editormd">
-                    <textarea></textarea>
+            <!--<div class="layui-form-item">-->
+                <!-- 内容主体区域 -->
+                <div id="content">
+                    <textarea class="editormd-markdown-textarea" name="contentMd"
+                               style="display:none;"></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
                 </div>
-            </div>
+            <!--</div>-->
             <div class="layui-form-item">
                 <div class="layui-input-block" style="display: flex; align-items: center;">
                     <div style="margin-left:auto; padding-right: 20px">
@@ -163,17 +165,43 @@
 <script type="text/javascript" data-th-src="@{/admin/lib/layui/layui.js}"></script>
 <script data-th-src="@{/admin/lib/editormd/jquery.min.js}"></script>
 <script data-th-src="@{/admin/lib/editormd/editormd.min.js}"></script>
+<script data-th-src="@{/admin/lib/axios/axios.min.js}" ></script>
+<script data-th-src="@{/admin/lib/xm-select.js}" ></script>
+
+
 <script>
     //JavaScript代码区域
+    const tags = xmSelect.render({
+        el: '#tags',
+        name: 'tags',
+        prop: {
+            name: 'name',
+            value: 'id',
+        },
+        data: []
+    });
+
+    axios.get('/api/tag/list').then(response => {
+        const res = response.data;
+        tags.update({
+            data: res.data,
+            autoRow: true,
+        })
+    });
     layui.use('form', function(){
         var form = layui.form;
-
         //监听提交
         form.on('submit(formDemo)', function(data){
+            data.field.tags = tags.getValue();
+            axios.post('/api/article/add', data.field).then(response => {
+                console.log(response)
+            });
             layer.msg(JSON.stringify(data.field));
             return false;
         });
-    });
+    })
+
+
     layui.use('upload', function() {
         var $ = layui.jquery
             , upload = layui.upload;
@@ -185,7 +213,7 @@
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
                 obj.preview(function (index, file, result) {
-                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#imgShow').attr('src', result); //图片链接（base64）
                 });
             }
             , done: function (res) {
@@ -206,7 +234,7 @@
             }
         });
     })
-    editormd("test-editormd", {
+    editormd("content", {
         placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
         width: "90%",
         height: 640,

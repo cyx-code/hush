@@ -12,4 +12,6 @@ public interface ArticleService extends IService<Article> {
     IPage<Article> prepareArticles(IPage<Article> page);
 
     Article findById(Long id);
+
+    boolean insertArticle(Article article);
 }

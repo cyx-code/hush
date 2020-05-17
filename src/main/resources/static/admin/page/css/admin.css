@@ -49,3 +49,6 @@ body {
 .layui-body {
     padding-top: 20px;
 }
+.xm-select-demo {
+    width: 200px;
+}

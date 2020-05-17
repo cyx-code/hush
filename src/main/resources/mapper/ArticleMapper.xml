@@ -26,7 +26,7 @@
       a.title,
       a.cover,
       a.author,
-      tc.name AS category,
+      tc.name AS categoryName,
       a.origin,
       a.state,
       a.publish_time,
@@ -42,4 +42,12 @@
     WHERE
         a.id = #{id}
   </select>
+  <insert id="insertAndBackId" parameterType="com.blog.hush.entity.Article"
+    useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO
+      tb_article(title, cover, author, category, origin, state, publish_time, edit_time, create_time, type, content, content_md)
+      VALUES (#{article.title},#{article.cover},#{article.author},
+      #{article.category},#{article.origin},#{article.state},#{article.publishTime},
+      #{article.editTime},#{article.createTime},#{article.type},#{article.content},#{article.contentMd})
+  </insert>
 </mapper>

@@ -6,4 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ArticleMapper extends BaseMapper<Article> {
     Article findById(@Param("id") Long id);
+
+    Long insertAndBackId(@Param("article") Article article);
 }

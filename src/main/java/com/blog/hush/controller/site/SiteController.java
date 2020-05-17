@@ -93,6 +93,7 @@ public class SiteController extends BaseController {
             model.addAttribute(SiteConstants.ARTICLE_MODEL, article);
 //            Map comments = commentService.listComments(queryPage, id, SiteConstants.COMMENT_SORT_ARTICLE);
         } catch (Exception e) {
+            e.printStackTrace();
             return "redirect:/error/500";
         }
         return "site/page/article";

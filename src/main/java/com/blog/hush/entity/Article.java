@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 @TableName("tb_article")
 public class Article implements Serializable {
+    private static final long serialVersionUID = 7194708595296532438L;
     /**
      * 编号
      */
@@ -41,7 +42,7 @@ public class Article implements Serializable {
     /**
      * 分类
      */
-    private String category;
+    private Long category;
 
     /**
      * 来源
@@ -97,5 +98,7 @@ public class Article implements Serializable {
     private List<Tag> tags;
     @TableField(exist = false)
     private String bgIco;
+    @TableField(exist = false)
+    private String categoryName;
 
 }

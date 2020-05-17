@@ -1,7 +1,9 @@
 package com.blog.hush.controller.admin;
 
+import com.blog.hush.common.constants.enums.CommonEnum;
 import com.blog.hush.common.utils.FileUtil;
 import com.blog.hush.common.utils.QiNiuUtil;
+import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Category;
 import com.blog.hush.entity.User;
 import com.blog.hush.service.CategoryService;
@@ -22,7 +24,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends BaseController {
     @Autowired
     private CategoryService categoryService;
     @Resource
@@ -37,7 +39,7 @@ public class AdminController {
     @GetMapping("/article/write")
     public String writeArticle(Model model) {
         List<Category> categories = categoryService.list();
-        model.addAttribute("categoies", categories);
+        model.addAttribute("categories", categories);
         return "admin/article/add";
     }
 
@@ -68,16 +70,12 @@ public class AdminController {
         HashMap<Object, Object> result = new HashMap<>();
         try {
             subject.login(token);
-            subject.isAuthenticated();
-            result.put("result", "success");
-            result.put("info", "登录成功");
-            return "/admin/home";
+            result.put("result", CommonEnum.COMMON_SUCCESS);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            result.put("result", "error");
-            result.put("info", "用户名或密码不正确");
+            result.put("result", CommonEnum.LOGIN_ERROR);
         }
         model.addAttribute("result", result);
-        return "/admin/login";
+        return subject.isAuthenticated() ? "/admin/home" : "/admin/login";
     }
 }

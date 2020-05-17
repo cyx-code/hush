@@ -24,3 +24,7 @@ mybatis-plus:
     jdbc-type-for-null: null
   global-config:
     banner: false
+
+logging:
+  level:
+    com.blog.hush.mapper: DEBUG

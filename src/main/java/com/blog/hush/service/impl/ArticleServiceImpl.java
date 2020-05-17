@@ -5,21 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.hush.common.constants.CommonConstants;
-import com.blog.hush.entity.Article;
-import com.blog.hush.entity.Category;
-import com.blog.hush.entity.Tag;
-import com.blog.hush.mapper.ArticleMapper;
-import com.blog.hush.mapper.CategoryMapper;
-import com.blog.hush.mapper.TagMapper;
+import com.blog.hush.entity.*;
+import com.blog.hush.mapper.*;
 import com.blog.hush.service.ArticleService;
+import org.apache.shiro.SecurityUtils;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
@@ -27,6 +22,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private ArticleMapper articleMapper;
     @Resource
     private CategoryMapper categoryMapper;
+    @Resource
+    private ArticleCategoryMapper articleCategoryMapper;
+    @Resource
+    private ArticleTagMapper articleTagMapper;
     @Resource
     private TagMapper tagMapper;
 
@@ -95,5 +94,44 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             List<Tag> tags = tagMapper.listTagsByArticleId(article.getId());
             article.setTags(tags);
         });
+    }
+
+
+    /**
+     * 添加一篇文章
+     * @param article
+     * @return
+     */
+    @Override
+    @Transactional
+    public boolean insertArticle(Article article) {
+        try {
+            Date now = new Date();
+            String username = (String) SecurityUtils.getSubject().getPrincipal();
+            article.setAuthor("cyx");
+            if ("on".equals(article.getState())) {
+                article.setPublishTime(now);
+            }
+            article.setEditTime(now);
+            article.setCreateTime(now);
+            articleMapper.insertAndBackId(article);
+            Long articleId = article.getId();
+            ArticleCategory articleCategory = new ArticleCategory();
+            articleCategory.setArticleId(articleId);
+            articleCategory.setCategoryId(article.getCategory());
+            articleCategoryMapper.insert(articleCategory);
+            List<ArticleTag> articleTags = new ArrayList<>();
+            article.getTags().forEach(tag -> {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setArticleId(articleId);
+                articleTag.setTagId(tag.getId());
+                articleTags.add(articleTag);
+            });
+            articleTagMapper.batchInsert(articleTags);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

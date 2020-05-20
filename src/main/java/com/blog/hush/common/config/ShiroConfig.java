@@ -33,7 +33,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/site/**", "anon");
         //其他请求一律拦截，一般放在拦截器链的最后
         //区分`user`和`authc`拦截器区别：`user`拦截器允许登录用户和RememberMe的用户访问
-        filterChainDefinitionMap.put("/admin/**", "user");
+        filterChainDefinitionMap.put("/**", "anon");
 
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;

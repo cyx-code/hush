@@ -42,6 +42,10 @@ public class AdminController extends BaseController {
         model.addAttribute("categories", categories);
         return "admin/article/add";
     }
+    @GetMapping("/article/show")
+    public String showArticle(Model model) {
+        return "admin/article/list";
+    }
 
     @PostMapping("/article/upload")
     @ResponseBody

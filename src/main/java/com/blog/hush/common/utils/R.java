@@ -52,6 +52,12 @@ public class R<T> implements Serializable {
         this.msg = enums.getMsg();
     }
 
+    public R(CommonEnum enums, T data) {
+        super();
+        this.code = enums.getCode();
+        this.msg = enums.getMsg();
+        this.data = data;
+    }
     public R(Throwable e) {
         super();
         this.code = CommonConstants.ERROR;

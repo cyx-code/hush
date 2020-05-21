@@ -1,7 +1,6 @@
 package com.blog.hush.controller;
 
 import com.blog.hush.common.utils.R;
-import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Tag;
 import com.blog.hush.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,7 +9,10 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/article")
@@ -22,8 +25,14 @@ public class ArticleController extends BaseController {
         return articleService.insertArticle(article) ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
     @GetMapping("list")
-    public R list() {
+    public Map list() {
+        new ConcurrentHashMap<>();
         List<Article> list = articleService.list();
-        return new R(CommonEnum.COMMON_SUCCESS, list);
+        Map<String, Object> res = new HashMap<>();
+        res.put("code", 0);
+        res.put("msg", "success");
+        res.put("count", list.size());
+        res.put("data", list);
+        return res;
     }
 }

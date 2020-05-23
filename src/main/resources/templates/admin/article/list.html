@@ -67,6 +67,78 @@
         <!-- 底部固定区域 -->
         © hush.com - 底部固定区域
     </div>
+
+
+    <div class="site-text" style="margin: 5%; display: none" id="window"  target="test123">
+
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <input type="hidden" id="id" name="id" />
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline" style="width: 500px">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" id="title" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">栏目</label>
+                <div class="layui-input-block">
+                    <select id="category" name="category" lay-verify="required"  >
+                        <option value=""></option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category.id}" th:text="${category.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <div id="tags" class="xm-select-demo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">公开</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="state" lay-skin="switch">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="0" title="原创" checked>
+                    <input type="radio" name="type" value="1" title="转载">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">封面图</label>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="img">点击上传</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片预览</label>
+            <input type="hidden" name="cover" id="cover"/>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="imgShow" width="200px" height="200px">
+                <p id="demoText"></p>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div id="content">
+                <textarea class="editormd-markdown-textarea" name="contentMd"
+                          style="display:none;"></textarea>
+            <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+            <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
+        </div>
+    </form>
+    </div>
+
 </div>
 <script type="text/javascript" data-th-src="@{/admin/lib/layui/layui.js}"></script>
 <script data-th-src="@{/admin/lib/editormd/jquery.min.js}"></script>
@@ -76,6 +148,16 @@
 <script data-th-src="@{/admin/js/admin.js}"></script>
 
 <script th:inline="none">
+    const tags = xmSelect.render({
+    el: '#tags',
+    name: 'tags',
+    prop: {
+        name: 'name',
+        value: 'id',
+    },
+    data: []
+});
+
     /*<![CDATA[*/
     layui.use('table', function(){
         var table = layui.table;
@@ -89,7 +171,7 @@
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '用户数据表'
+            ,title: '文章列表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
@@ -105,8 +187,9 @@
                 ,{field:'create_time', title:'创建时间', width:100, sort: true}
                 ,{field:'type', title:'类型', width:120}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
-            ]]
-            ,page: true
+            ]],
+            page: true,
+            limit: 20
         });
 
         //头工具栏事件
@@ -142,17 +225,67 @@
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.email
-                }, function(value, index){
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
+                const  editArticle = layer.open({
+                    type: 1 //Page层类型
+                    ,skin: 'layui-layer-molv'
+                    ,area: ['380px', '270px']
+                    ,title: ['编辑书本信息','font-size:18px']
+                    ,btn: ['确定', '取消']
+                    ,shadeClose: true
+                    ,shade: 0 //遮罩透明度
+                    ,maxmin: true //允许全屏最小化
+                    ,content:$("#window")  //弹窗路径
+                    ,success:function(layero,index){
+                        $('#id').val(data.id);
+                        $('#title').val(data.title);
+                        tags.setValue(data.tags);
+                        $('#price').val(data.price);
+                    },yes:function(index,layero){
+                        $.getJSON(url+'/BookAction.action?methodName=edit',{
+                            bid: data.bid,
+                            bid: $('#bid').val(),
+                            bname: $('#bname').val(),
+                            price: $('#price').val()
+                        },function(data){
+                            //根据后台返回的参数，来进行判断
+                            if(data>0){
+                                layer.alert('编辑成功',{icon:1,title:'提示'},function(i){
+                                    layer.close(i);
+                                    layer.close(index);//关闭弹出层
+                                    $("#book")[0].reset()//重置form
+                                })
+                                table.reload('demo',{//重载表格
+                                    page:{
+                                        curr:1
+                                    }
+                                })
+                            }
+                        });
+                    }
                 });
+                layer.full(editArticle);
             }
         });
+    });
+    editormd("content", {
+        placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
+        width: '100%',
+        height: 640,
+        syncScrolling: "single",
+        path: "/admin/lib/editormd/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
+        // theme: "dark",//工具栏主题
+        // previewTheme: "dark",//预览主题
+        // editorTheme: "pastel-on-dark",//编辑主题
+        saveHTMLToTextarea: true,
+        emoji: false,
+        taskList: true,
+        tocm: true,         // Using [TOCM]
+        tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+        flowChart: true,             // 开启流程图支持，默认关闭
+        sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+        toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
+            return editormd.toolbarModes['simple']; // full, simple, mini
+        },
     });
     /*]]>*/
 </script>

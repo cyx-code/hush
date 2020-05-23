@@ -44,6 +44,8 @@ public class AdminController extends BaseController {
     }
     @GetMapping("/article/show")
     public String showArticle(Model model) {
+        List<Category> categories = categoryService.list();
+        model.addAttribute("categories", categories);
         return "admin/article/list";
     }
 

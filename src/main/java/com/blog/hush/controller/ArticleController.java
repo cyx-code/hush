@@ -1,5 +1,7 @@
 package com.blog.hush.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.enums.CommonEnum;
 import com.blog.hush.common.utils.R;
 import com.blog.hush.entity.Article;
@@ -25,14 +27,17 @@ public class ArticleController extends BaseController {
         return articleService.insertArticle(article) ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
     @GetMapping("list")
-    public Map list() {
+    public Map list(Long page, Long limit) {
         new ConcurrentHashMap<>();
-        List<Article> list = articleService.list();
+        IPage<Article> pageInfo = new Page<>(page, limit);
+        pageInfo.setCurrent(page);
+        pageInfo.setSize(limit);
+        IPage<Article> articleIPage = articleService.page(pageInfo);
         Map<String, Object> res = new HashMap<>();
         res.put("code", 0);
         res.put("msg", "success");
-        res.put("count", list.size());
-        res.put("data", list);
+        res.put("count", articleIPage.getTotal());
+        res.put("data", articleIPage.getRecords());
         return res;
     }
 }

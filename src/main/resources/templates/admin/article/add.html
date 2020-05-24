@@ -101,14 +101,14 @@
                 </div>
             </div>
 
-            <!-- 内容主体区域 -->
-            <div id="content">
-                <textarea class="editormd-markdown-textarea" name="contentMd"
-                           style="display:none;"></textarea>
-                <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
-                <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
+            <div class="layui-form-item" id="content">
+                <!-- 内容主体区域 -->
+                    <textarea class="editormd-markdown-textarea" name="contentMd"
+                               style="display:none;"></textarea>
+                    <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                    <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item" id="handleButton">
                 <div class="layui-input-block" style="display: flex; align-items: center;">
                     <div style="margin-left:auto; padding-right: 20px">
                         <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
@@ -197,7 +197,7 @@
                 });
             }
         });
-    })
+    });
     editormd("content", {
         placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
         width: "90%",
@@ -217,6 +217,12 @@
         toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
             return editormd.toolbarModes['simple']; // full, simple, mini
         },
+        onfullscreen: function() {
+            $('#handleButton').hide();
+        },
+        onfullscreenExit: function() {
+            $('#handleButton').show();
+        }
     });
 </script>
 </body>

@@ -86,7 +86,6 @@
                 <label class="layui-form-label">栏目</label>
                 <div class="layui-input-block">
                     <select id="category" name="category" lay-verify="required"  >
-                        <option value=""></option>
                         <option th:each="category : ${categories}"
                                 th:value="${category.id}" th:text="${category.name}"></option>
                     </select>
@@ -103,7 +102,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">公开</label>
                 <div class="layui-input-block">
-                    <input type="checkbox" name="state" lay-skin="switch">
+                    <input type="checkbox" id="state" name="state" lay-skin="switch">
                 </div>
             </div>
             <div class="layui-inline">
@@ -130,9 +129,7 @@
         </div>
         <div class="layui-form-item">
             <div id="content">
-                <textarea style="display:none;">### 关于 Editor.md
-
-                **Editor.md** 是一款开源的、可嵌入的 Markdown 在线编辑器（组件），基于 CodeMirror、jQuery 和 Marked 构建。
+                <textarea style="display:none;">
                 </textarea>
             </div>
         </div>
@@ -204,7 +201,7 @@
                 ,{field:'createTime', title:'创建时间', sort: true},
                 ,{field:'category', hide: true}
                 ,{field:'state', hide: true}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                ,{fixed:'right', title:'操作', toolbar: '#barDemo', width:150}
             ]],
             page: true,
             limit: 20
@@ -232,7 +229,10 @@
                     break;
             };
         });
-
+        var form = null;
+        layui.use('form', function() {
+            form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成
+        });
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
@@ -242,21 +242,32 @@
                     layer.close(index);
                 });
             } else if(obj.event === 'edit'){
-                const  editArticle = layer.open({
+                    const  editArticle = layer.open({
                     type: 1 //Page层类型
                     ,skin: 'layui-layer-molv'
                     ,area: ['100%', '100%']
-                    ,title: ['编辑书本信息','font-size:18px']
+                    ,title: ['编辑博客','font-size:18px']
                     ,btn: ['确定', '取消']
                     ,shadeClose: true
                     ,shade: 0 //遮罩透明度
-                    ,content:$("#window")  //弹窗路径
-                    ,success:function(layero,index){
-                        $('#id').val(data.id);
-                        $('#title').val(data.title);
-                        tags.setValue(data.tags);
-                        contentEditor.setMarkdown(data.contentMd);
-                        contentEditor.resize('100%', 640);
+                    ,content: $("#window")  //弹窗路径
+                    ,success: function(layero,index){
+
+                            $('#id').val(data.id);
+                            $('#title').val(data.title);
+                            $('#imgShow').attr('src', data.cover);
+                            console.log(data.state);
+                            // layui中checkbox设置值不能用attr要是用prop！！！
+                            if (data.state == '1') {
+                                $('#state').prop('checked', true);
+                            } else {
+                                $('#state').prop('checked', false);
+                            }
+                            tags.setValue(data.tags);
+                            $('#category').val(data.category);
+                            contentEditor.setMarkdown(data.contentMd);
+                            contentEditor.resize('100%', 640);
+                            form.render();//在最后添加这句代码
                     },yes:function(index,layero){
                         $.getJSON(url+'/BookAction.action?methodName=edit',{
                             bid: data.bid,

@@ -8,6 +8,7 @@ import com.blog.hush.common.constants.CommonConstants;
 import com.blog.hush.entity.*;
 import com.blog.hush.mapper.*;
 import com.blog.hush.service.ArticleService;
+import com.blog.hush.vo.ArticleVo;
 import org.apache.shiro.SecurityUtils;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
@@ -133,5 +134,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<ArticleVo> listArticleVo(Long start, Long limit) {
+        start = start - 1 < 0 ? 0 : start - 1;
+        List<ArticleVo> articleVos = articleMapper.listArticleVo(start * limit, limit);
+        articleVos.forEach(articleVo -> {
+            List<Tag> tags = articleTagMapper.listTagsByArticleId(articleVo.getId());
+            articleVo.setTags(tags);
+        });
+        return articleVos;
     }
 }

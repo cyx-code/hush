@@ -15,4 +15,13 @@
       (#{articleTag.articleId},#{articleTag.tagId})
     </foreach>
   </insert>
+  <select id="listTagsByArticleId" parameterType="long" resultType="com.blog.hush.entity.Tag">
+    SELECT
+        t.id,
+        t.`name`
+    FROM
+        tb_tag t
+        LEFT JOIN tb_article_tag at ON t.id=at.tag_id
+        WHERE at.article_id=#{articleId}
+  </select>
 </mapper>

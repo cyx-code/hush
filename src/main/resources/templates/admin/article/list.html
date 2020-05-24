@@ -159,6 +159,13 @@
         },
         data: []
     });
+    axios.get('/api/tag/list').then(response => {
+        const res = response.data;
+        tags.update({
+            data: res.data,
+            autoRow: true,
+        })
+    });
     var contentEditor = editormd("content", {
         path: "/admin/lib/editormd/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
         height: 640,
@@ -173,6 +180,7 @@
         table.render({
             elem: '#test'
             ,url:'/api/article/list'
+            ,cellMinWidth: 80
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                 title: '提示'
@@ -182,18 +190,20 @@
             ,title: '文章列表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
-                ,{field:'title', title:'标题', width:120, edit: 'text'}
-                ,{field:'cover', title:'图片地址', width:150, edit: 'text', templet: function(res){
+                ,{field:'id', title:'ID', fixed: 'left', unresize: true, sort: true, width: 70}
+                ,{field:'title', title:'标题', edit: 'text'}
+                ,{field:'cover', title:'图片地址', edit: 'text', templet: function(res){
                         return '<em>'+ res.cover +'</em>'
                     }}
-                ,{field:'author', title:'作者', width:80, edit: 'text', sort: true}
-                ,{field:'category', title:'栏目', width:100}
-                ,{field:'state', title:'状态'}
-                ,{field:'publish_time', title:'出版时间', width:80, sort: true}
-                ,{field:'edit_time', title:'编辑时间', width:120}
-                ,{field:'create_time', title:'创建时间', width:100, sort: true}
-                ,{field:'type', title:'类型', width:120}
+                ,{field:'author', title:'作者', edit: 'text', sort: true}
+                ,{field:'categoryName', title:'栏目'}
+                ,{field:'stateDesc', title:'状态'}
+                ,{field:'type', title:'类型', width: 70}
+                ,{field:'publishTime', title:'出版时间', sort: true}
+                ,{field:'editTime', title:'编辑时间'}
+                ,{field:'createTime', title:'创建时间', sort: true},
+                ,{field:'category', hide: true}
+                ,{field:'state', hide: true}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]],
             page: true,
@@ -226,7 +236,6 @@
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
                     obj.del();

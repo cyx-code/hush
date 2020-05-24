@@ -7,6 +7,7 @@ import com.blog.hush.common.utils.R;
 import com.blog.hush.entity.Article;
 import com.blog.hush.entity.User;
 import com.blog.hush.service.ArticleService;
+import com.blog.hush.vo.ArticleVo;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,13 @@ public class ArticleController extends BaseController {
         IPage<Article> pageInfo = new Page<>(page, limit);
         pageInfo.setCurrent(page);
         pageInfo.setSize(limit);
-        IPage<Article> articleIPage = articleService.page(pageInfo);
+        List<ArticleVo> articleVos = articleService.listArticleVo(page, limit);
+        int count = articleService.count();
         Map<String, Object> res = new HashMap<>();
         res.put("code", 0);
         res.put("msg", "success");
-        res.put("count", articleIPage.getTotal());
-        res.put("data", articleIPage.getRecords());
+        res.put("count", count);
+        res.put("data", articleVos);
         return res;
     }
 }

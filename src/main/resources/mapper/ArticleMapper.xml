@@ -42,6 +42,30 @@
     WHERE
         a.id = #{id}
   </select>
+    <select id="listArticleVo" resultType="com.blog.hush.vo.ArticleVo">
+        SELECT
+          a.id,
+          a.title,
+          a.cover,
+          a.author,
+          tc.name AS categoryName,
+          a.origin,
+          a.state,
+          if(a.state='1', '已发布', '未发布') as stateDesc,
+          a.publish_time,
+          a.edit_time,
+          a.create_time,
+          a.type,
+          a.content,
+          a.content_md,
+          tc.id as category
+        FROM
+            tb_article a
+            LEFT JOIN tb_article_category ac ON a.id = ac.article_id
+            LEFT JOIN tb_category tc ON tc.id = ac.category_id
+        LIMIT #{start},#{size}
+
+    </select>
   <insert id="insertAndBackId" parameterType="com.blog.hush.entity.Article"
     useGeneratedKeys="true" keyProperty="id">
       INSERT INTO

@@ -17,4 +17,6 @@ public interface ArticleService extends IService<Article> {
     boolean insertArticle(Article article);
 
     List<ArticleVo> listArticleVo(Long start, Long limit);
+
+    boolean modify(Article article);
 }

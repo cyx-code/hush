@@ -9,6 +9,7 @@ import com.blog.hush.entity.*;
 import com.blog.hush.mapper.*;
 import com.blog.hush.service.ArticleService;
 import com.blog.hush.vo.ArticleVo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
@@ -145,5 +146,60 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleVo.setTags(tags);
         });
         return articleVos;
+    }
+
+    @Override
+    @Transactional
+    public boolean modify(Article article) {
+        try {
+            Date now = new Date();
+            article.setEditTime(now);
+            if ("0".equals(article.getState())) {
+                article.setPublishTime(null);
+            }
+            if ("1".equals(article.getState()) && article.getPublishTime() == null) {
+                article.setPublishTime(now);
+            }
+            // 更新文章
+            articleMapper.updateById(article);
+            LambdaQueryWrapper<ArticleCategory> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(ArticleCategory::getArticleId, article.getId());
+            // 更新文章对应的栏目信息
+            ArticleCategory articleCategory = articleCategoryMapper.selectOne(wrapper);
+            if (articleCategory.getCategoryId() != article.getCategory()) {
+                ArticleCategory newArticleCategory = new ArticleCategory();
+                newArticleCategory.setId(articleCategory.getId());
+                newArticleCategory.setArticleId(article.getId());
+                newArticleCategory.setCategoryId(article.getCategory());
+                articleCategoryMapper.updateById(newArticleCategory);
+            }
+            List<Tag> tags = articleTagMapper.listTagsByArticleId(article.getId());
+            List<Tag> articleTags = article.getTags();
+            List<Long> removeTags = new ArrayList<>();
+            List<ArticleTag> newTags = new ArrayList<>();
+            Iterator<Tag> iterator = articleTags.iterator();
+            while (iterator.hasNext()) {
+                Tag next = iterator.next();
+                if (tags.contains(next)) {
+                    tags.remove(next);
+                    iterator.remove();
+                }
+            }
+            tags.forEach(tag -> {
+                removeTags.add(tag.getId());
+            });
+            articleTags.forEach(articleTag -> {
+                ArticleTag item = new ArticleTag();
+                item.setTagId(articleTag.getId());
+                item.setArticleId(article.getId());
+                newTags.add(item);
+            });
+            articleTagMapper.batchInsert(newTags);
+            articleTagMapper.batchDelete(article.getId(), removeTags);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

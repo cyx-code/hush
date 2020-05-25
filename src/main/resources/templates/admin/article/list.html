@@ -69,9 +69,9 @@
     </div>
 
 
-    <div class="site-text" style="margin: 5%;  display: none" id="window"  target="test123">
+    <div class="site-text" style="margin: 5%;  display: none" id="editorWindow">
 
-    <form class="layui-form" style="width: 100%;" action="">
+    <form class="layui-form" style="width: 100%;" lay-filter="articleFilter">
         <div class="layui-form-item">
             <input type="hidden" id="id" name="id" />
         </div>
@@ -129,8 +129,10 @@
         </div>
         <div class="layui-form-item">
             <div id="content">
-                <textarea style="display:none;">
-                </textarea>
+                <!-- 内容主体区域 -->
+                <textarea class="editormd-markdown-textarea" name="contentMd" style="display:none;"></textarea>
+                <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
             </div>
         </div>
         <!-- 内容主体区域 -->
@@ -190,12 +192,14 @@
                 ,{field:'id', title:'ID', fixed: 'left', unresize: true, sort: true, width: 70}
                 ,{field:'title', title:'标题', edit: 'text'}
                 ,{field:'cover', title:'图片地址', edit: 'text', templet: function(res){
-                        return '<em>'+ res.cover +'</em>'
-                    }}
+                    return '<p>'+ res.cover +'</em>'
+                }}
                 ,{field:'author', title:'作者', edit: 'text', sort: true}
                 ,{field:'categoryName', title:'栏目'}
                 ,{field:'stateDesc', title:'状态'}
-                ,{field:'type', title:'类型', width: 70}
+                ,{field:'type', title:'类型', width: 70, templet: function(res){
+                    return '<p>'+ (res.type == "1" ? "转载" : "原创") +'</p>'
+                }}
                 ,{field:'publishTime', title:'出版时间', sort: true}
                 ,{field:'editTime', title:'编辑时间'}
                 ,{field:'createTime', title:'创建时间', sort: true},
@@ -250,45 +254,42 @@
                     ,btn: ['确定', '取消']
                     ,shadeClose: true
                     ,shade: 0 //遮罩透明度
-                    ,content: $("#window")  //弹窗路径
+                    ,content: $("#editorWindow")  //弹窗路径
                     ,success: function(layero,index){
-
                             $('#id').val(data.id);
                             $('#title').val(data.title);
                             $('#imgShow').attr('src', data.cover);
-                            console.log(data.state);
                             // layui中checkbox设置值不能用attr要是用prop！！！
-                            if (data.state == '1') {
-                                $('#state').prop('checked', true);
-                            } else {
-                                $('#state').prop('checked', false);
-                            }
+                            $('#state').prop('checked', data.state == '1');
+                            $('#cover').val(data.cover);
+                            $("input[name=type][value='0']").prop("checked", data.type == 0);
+                            $("input[name=type][value='1']").prop("checked", data.type == 1);
                             tags.setValue(data.tags);
                             $('#category').val(data.category);
                             contentEditor.setMarkdown(data.contentMd);
                             contentEditor.resize('100%', 640);
                             form.render();//在最后添加这句代码
-                    },yes:function(index,layero){
-                        $.getJSON(url+'/BookAction.action?methodName=edit',{
-                            bid: data.bid,
-                            bid: $('#bid').val(),
-                            bname: $('#bname').val(),
-                            price: $('#price').val()
-                        },function(data){
-                            //根据后台返回的参数，来进行判断
-                            if(data>0){
-                                layer.alert('编辑成功',{icon:1,title:'提示'},function(i){
-                                    layer.close(i);
-                                    layer.close(index);//关闭弹出层
-                                    $("#book")[0].reset()//重置form
-                                })
-                                table.reload('demo',{//重载表格
-                                    page:{
-                                        curr:1
-                                    }
-                                })
-                            }
-                        });
+                    }, yes: function (index, layero) {
+                        var article = form.val('articleFilter');
+                        article.tags = tags.getValue();
+                        article.state = article.state === "on" ? "1" : "0";
+                        article.createTime = data.createTime;
+                        article.author = data.author;
+                        article.publishTime = data.publishTime;
+                        axios.put('/api/article/edit', article).then((data) => {
+                        //根据后台返回的参数，来进行判断
+                        if (data > 0) {
+                            layer.alert('编辑成功',{icon: 1, title: '提示'}, function (i) {
+                                layer.close(i);
+                                layer.close(index);//关闭弹出层
+                                $("#book")[0].reset()//重置form
+                            })
+                            table.reload('demo',{//重载表格
+                                page:{
+                                    curr:1
+                                }
+                            })
+                        }});
                     }
                 });
                 layer.full(editArticle);

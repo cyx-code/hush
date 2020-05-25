@@ -42,4 +42,10 @@ public class ArticleController extends BaseController {
         res.put("data", articleVos);
         return res;
     }
+
+    @PutMapping("edit")
+    public String edit(@RequestBody Article article) {
+        boolean result = articleService.modify(article);
+        return "1";
+    }
 }

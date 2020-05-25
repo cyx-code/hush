@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Data
 @TableName("tb_article")
+@ToString
 public class Article implements Serializable {
     private static final long serialVersionUID = 7194708595296532438L;
     /**

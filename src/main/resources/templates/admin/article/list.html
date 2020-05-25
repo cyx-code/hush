@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>hush</title>
-    <link rel="icon" th:href="@{/images/favicon.jpeg}">
+    <link rel="icon" th:href="@{/images/favicon.png}">
     <link rel="stylesheet" data-th-href="@{/admin/lib/layui/css/layui.css}"/>
     <link rel="stylesheet" data-th-href="@{/admin/lib/editormd/css/editormd.css}" />
     <link rel="stylesheet" data-th-href="@{/admin/page/css/admin.css}" />
@@ -31,7 +31,7 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
+                    hush
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
@@ -50,9 +50,7 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-                <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-                <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                <button class="layui-btn layui-btn-sm" lay-event="getCheckData">删除选中行数据</button>
             </div>
         </script>
 
@@ -165,11 +163,7 @@
             ,url:'/api/article/list'
             ,cellMinWidth: 80
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
-            ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
-                title: '提示'
-                ,layEvent: 'LAYTABLE_TIPS'
-                ,icon: 'layui-icon-tips'
-            }]
+            ,defaultToolbar: ['filter', 'exports']
             ,title: '文章列表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
@@ -203,14 +197,6 @@
                     var data = checkStatus.data;
                     layer.alert(JSON.stringify(data));
                     break;
-                case 'getCheckLength':
-                    var data = checkStatus.data;
-                    layer.msg('选中了：'+ data.length + ' 个');
-                    break;
-                case 'isAll':
-                    layer.msg(checkStatus.isAll ? '全选': '未全选');
-                    break;
-
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
                     layer.alert('这是工具栏右侧自定义的一个图标按钮');

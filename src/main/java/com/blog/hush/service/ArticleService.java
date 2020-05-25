@@ -19,4 +19,6 @@ public interface ArticleService extends IService<Article> {
     List<ArticleVo> listArticleVo(Long start, Long limit);
 
     boolean modify(Article article);
+
+    boolean delete(Long id);
 }

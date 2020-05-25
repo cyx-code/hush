@@ -46,7 +46,7 @@
 
 
     <div class="layui-body">
-        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <table class="layui-hide" id="articles" lay-filter="articles"></table>
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
@@ -124,7 +124,6 @@
             <input type="hidden" name="cover" id="cover"/>
             <div class="layui-upload-list">
                 <img class="layui-upload-img" id="imgShow" width="200px" height="200px">
-                <p id="demoText"></p>
             </div>
         </div>
         <div class="layui-form-item">
@@ -149,6 +148,7 @@
 <script data-th-src="@{/admin/js/admin.js}"></script>
 
 <script th:inline="none">
+    /*<![CDATA[*/
     const tags = xmSelect.render({
         el: '#tags',
         name: 'tags',
@@ -168,16 +168,16 @@
     var contentEditor = editormd("content", {
         path: "/admin/lib/editormd/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
         height: 640,
+        saveHTMLToTextarea: true,
         onfullscreenExit: function() {
             this.resize('100%', 640);
         }
     });
-    /*<![CDATA[*/
     layui.use('table', function(){
         var table = layui.table;
 
         table.render({
-            elem: '#test'
+            elem: '#articles'
             ,url:'/api/article/list'
             ,cellMinWidth: 80
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
@@ -212,7 +212,7 @@
         });
 
         //头工具栏事件
-        table.on('toolbar(test)', function(obj){
+        table.on('toolbar(articles)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'getCheckData':
@@ -238,12 +238,15 @@
             form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成
         });
         //监听行工具事件
-        table.on('tool(test)', function(obj){
+        table.on('tool(articles)', function(obj){
             var data = obj.data;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
                     obj.del();
                     layer.close(index);
+                    axios.delete('/api/article/delete/'+data.id).then(response => {
+
+                    })
                 });
             } else if(obj.event === 'edit'){
                     const  editArticle = layer.open({
@@ -276,19 +279,20 @@
                         article.createTime = data.createTime;
                         article.author = data.author;
                         article.publishTime = data.publishTime;
-                        axios.put('/api/article/edit', article).then((data) => {
+                        axios.put('/api/article/edit', article).then((response) => {
                         //根据后台返回的参数，来进行判断
-                        if (data > 0) {
+                        if (response.data.code == 200) {
                             layer.alert('编辑成功',{icon: 1, title: '提示'}, function (i) {
                                 layer.close(i);
                                 layer.close(index);//关闭弹出层
-                                $("#book")[0].reset()//重置form
-                            })
-                            table.reload('demo',{//重载表格
+                            });
+                            table.reload('articles',{//重载表格
                                 page:{
                                     curr:1
                                 }
                             })
+                        } else {
+                            layer.msg(response.data.msg);
                         }});
                     }
                 });

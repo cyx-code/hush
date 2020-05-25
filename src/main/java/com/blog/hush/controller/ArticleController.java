@@ -44,8 +44,13 @@ public class ArticleController extends BaseController {
     }
 
     @PutMapping("edit")
-    public String edit(@RequestBody Article article) {
+    public R edit(@RequestBody Article article) {
         boolean result = articleService.modify(article);
-        return "1";
+        return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
+    }
+    @DeleteMapping("/delete/{id}")
+    public R delete(@PathVariable("id") Long id) {
+        boolean result = articleService.delete(id);
+        return new R(CommonEnum.COMMON_SUCCESS);
     }
 }

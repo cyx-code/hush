@@ -194,8 +194,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 item.setArticleId(article.getId());
                 newTags.add(item);
             });
-            articleTagMapper.batchInsert(newTags);
-            articleTagMapper.batchDelete(article.getId(), removeTags);
+            if (newTags.size() > 0) {
+                articleTagMapper.batchInsert(newTags);
+            }
+            if (removeTags.size() > 0) {
+                articleTagMapper.batchDelete(article.getId(), removeTags);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        try {
+            LambdaQueryWrapper<ArticleTag> tagWrapper = new LambdaQueryWrapper<>();
+            tagWrapper.eq(ArticleTag::getArticleId, id);
+            articleTagMapper.delete(tagWrapper);
+            LambdaQueryWrapper<ArticleCategory> categoryWrapper = new LambdaQueryWrapper<>();
+            categoryWrapper.eq(ArticleCategory::getArticleId, id);
+            articleCategoryMapper.delete(categoryWrapper);
+            LambdaQueryWrapper<Article> articleWrapper = new LambdaQueryWrapper<>();
+            articleWrapper.eq(Article::getId, id);
+            articleMapper.delete(articleWrapper);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -33,12 +33,6 @@ public class Comment implements Serializable {
     private Long cId;
 
     /**
-     * 文章标题
-     */
-    @TableField("article_title")
-    private String articleTitle;
-
-    /**
      * 文章ID
      */
     @TableField("article_id")

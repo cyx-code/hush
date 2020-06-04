@@ -45,8 +45,7 @@
                rel="nofollow" style="display:none"
                onclick="return TypechoComment.cancelReply();"> / Cancel Reply</a>
         </span>
-        <form method="post" action="" id="comment-form" class="comment-form" role="form">
-            <input name="articleTitle" th:value="${article.title}" style="display: none;">
+        <form id="comment-form" class="comment-form" role="form">
             <input name="articleId" th:value="${article.id}" style="display: none;">
             <input name="sort" value="0" style="display: none;">
             <input name="pid" id="pId" value="" style="display: none;">
@@ -101,7 +100,7 @@
                                     <div class="comment-meta">
                                         <time class="comment-time">childtime</time>
                                         <span class="comment-reply">
-                                            <a>Reply</a>
+                                            <a th:onclick="reply([[${parent.id}]], [[${child.name}]]);">Reply</a>
                                         </span>
                                     </div>
                                 </div>
@@ -141,4 +140,5 @@
 <script th:src="@{/admin/lib/editormd/jquery.min.js}"></script>
 <script th:src="@{/site/js/article.js}"></script>
 </body>
+
 </html>

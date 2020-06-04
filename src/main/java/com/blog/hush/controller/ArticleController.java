@@ -29,7 +29,6 @@ public class ArticleController extends BaseController {
     }
     @GetMapping("list")
     public Map list(Long page, Long limit) {
-        new ConcurrentHashMap<>();
         IPage<Article> pageInfo = new Page<>(page, limit);
         pageInfo.setCurrent(page);
         pageInfo.setSize(limit);

@@ -3,6 +3,7 @@ package com.blog.hush.controller;
 import com.blog.hush.common.utils.R;
 import com.blog.hush.entity.Tag;
 import com.blog.hush.service.TagService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tag")
+@Api(value = "TagController", tags = {"标签数据接口"})
 public class TagController extends BaseController {
     @Autowired
     private TagService tagService;

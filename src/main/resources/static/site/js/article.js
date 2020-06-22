@@ -121,7 +121,7 @@ document.querySelector('#comment-form').addEventListener('submit',function(e){
     $.ajax({
         type: 'post',
         contentType: 'application/json;charset=utf-8',
-        url: '/api/comment/add',
+        url: '/api/comment',
         data: JSON.stringify(data),
         success: (res) => {
             console.log(res)

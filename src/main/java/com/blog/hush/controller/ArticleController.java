@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api/article")
-@Api(value = "ArticleController", tags = {"文章管理接口"})
+@Api(value = "ArticleController", tags = {"文章数据接口"})
 public class ArticleController extends BaseController {
     @Autowired
     private ArticleService articleService;

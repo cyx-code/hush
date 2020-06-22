@@ -4,20 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.blog.hush.common.constants.CommonConstants;
 import com.blog.hush.common.exception.GlobalException;
+import com.blog.hush.common.utils.IPUtil;
 import com.blog.hush.common.utils.QueryPage;
+import com.blog.hush.common.utils.R;
 import com.blog.hush.common.utils.TreeUtil;
 import com.blog.hush.dto.Tree;
 import com.blog.hush.entity.Comment;
 import com.blog.hush.mapper.CommentMapper;
 import com.blog.hush.service.CommentService;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
@@ -28,6 +31,22 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public List<Comment> listRecentComments() {
         List<Comment> comments = commentMapper.findAll(CommonConstants.DEFAULT_RELEASE_STATUS, new QueryPage(0, 8));
         return comments;
+    }
+
+    @Override
+    public boolean insertOne(Comment comment, HttpServletRequest request) {
+        String ip = IPUtil.getIpAddress(request);
+        String address = IPUtil.getIpRegion(ip);
+        String header = request.getHeader(CommonConstants.USER_AGENT);
+        UserAgent userAgent = UserAgent.parseUserAgentString(header);
+        Browser browser = userAgent.getBrowser();
+        OperatingSystem operatingSystem = userAgent.getOperatingSystem();
+        comment.setIp(ip);
+        comment.setAddress(address);
+        comment.setTime(new Date());
+        comment.setDevice(browser.getName() + "||" + operatingSystem.getName());
+        int count = commentMapper.insert(comment);
+        return count > 0;
     }
 
     @Override
@@ -68,4 +87,5 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         return map;
     }
+
 }

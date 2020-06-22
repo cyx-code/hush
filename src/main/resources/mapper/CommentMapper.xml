@@ -8,7 +8,6 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="p_id" property="pId" jdbcType="BIGINT" />
     <result column="c_id" property="cId" jdbcType="BIGINT" />
-    <result column="article_title" property="articleTitle" jdbcType="VARCHAR" />
     <result column="article_id" property="articleId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="c_name" property="cName" jdbcType="VARCHAR" />

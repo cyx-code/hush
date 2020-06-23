@@ -13,7 +13,6 @@
     <result column="c_name" property="cName" jdbcType="VARCHAR" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="url" property="url" jdbcType="VARCHAR" />
     <result column="sort" property="sort" jdbcType="BIGINT" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="device" property="device" jdbcType="VARCHAR" />
@@ -21,7 +20,7 @@
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <select id="findAll" resultMap="BaseResultMap">
-       SELECT DISTINCT
+      SELECT DISTINCT
           c.content,
           c.NAME,
           c.article_id

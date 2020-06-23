@@ -62,11 +62,6 @@ public class Comment implements Serializable {
     private String email;
 
     /**
-     * 网址
-     */
-    private String url;
-
-    /**
      * 分类：0:默认，文章详情页，1:友链页，2:关于页
      */
     private Integer sort;

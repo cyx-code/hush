@@ -11,13 +11,16 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+/**
+ * IP工具类
+ */
 public class IPUtil {
     private static Log LOGGER = LogFactory.get(IPUtil.class);
     private static final String UNKNOWN = "unknown";
     private static final String PATH = IPUtil.class.getResource("/ip2region/ip2region.db").getPath();
 
     /**
-     * 得到用户的真实IP地址
+     * 得到用户的真实ip地址
      * @param request
      * @return
      */
@@ -36,8 +39,9 @@ public class IPUtil {
     }
 
     /**
+     * 得到ip地址对应的区域
      * 源码：https://github.com/lionsoul2014/ip2region/blob/master/binding/java/src/main/java/org/lionsoul/ip2region/test/TestSearcher.java
-     * @param ip
+     * @param ip 地址
      * @return
      */
     public static String getIpRegion(String ip) {

@@ -21,12 +21,14 @@ public interface SiteConstants {
     /**
      * 最新的评论
      */
-    String RECENT_COMMENTS = "Recent_Comments";
+    String RECENT_COMMENTS = "RecentComments";
 
     /**
      * 文章详情页
      */
     String ARTICLE_MODEL = "article";
+
+    String COMMENTS_MODEL = "comments";
 
     int COMMENT_SORT_ARTICLE = 0;
 }

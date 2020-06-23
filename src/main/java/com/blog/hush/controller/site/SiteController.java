@@ -84,14 +84,16 @@ public class SiteController extends BaseController {
             if (StringUtils.isBlank(page)) {
                 page = "1";
             }
-            QueryPage queryPage = new QueryPage(Integer.parseInt(page), SiteConstants.DEFAULT_PAGE_LIMIT);
+            QueryPage queryPage = new QueryPage(SiteConstants.DEFAULT_PAGE_LIMIT, Integer.parseInt(page));
             Article article = articleService.findById(Long.valueOf(id));
             // 如果文章数据是null或为发布状态则跳转至500
             if (article == null || article.getState().equals(CommonConstants.DEFAULT_DRAFT_STATUS)) {
                 return "redirect:/error/500";
             }
             model.addAttribute(SiteConstants.ARTICLE_MODEL, article);
-//            Map comments = commentService.listComments(queryPage, id, SiteConstants.COMMENT_SORT_ARTICLE);
+            Map comments = commentService.listComments(queryPage, id, SiteConstants.COMMENT_SORT_ARTICLE);
+            model.addAttribute(SiteConstants.COMMENTS_MODEL, comments);
+            initModel(model);
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error/500";

@@ -1,9 +1,10 @@
-package com.blog.hush.controller;
+package com.blog.hush.controller.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.enums.CommonEnum;
 import com.blog.hush.common.utils.R;
+import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Article;
 import com.blog.hush.entity.User;
 import com.blog.hush.service.ArticleService;

@@ -84,7 +84,7 @@ public class SiteController extends BaseController {
             if (StringUtils.isBlank(page)) {
                 page = "1";
             }
-            QueryPage queryPage = new QueryPage(SiteConstants.DEFAULT_PAGE_LIMIT, Integer.parseInt(page));
+            QueryPage queryPage = new QueryPage(SiteConstants.DEFAULT_COMMENT_LIMIT, Integer.parseInt(page));
             Article article = articleService.findById(Long.valueOf(id));
             // 如果文章数据是null或为发布状态则跳转至500
             if (article == null || article.getState().equals(CommonConstants.DEFAULT_DRAFT_STATUS)) {

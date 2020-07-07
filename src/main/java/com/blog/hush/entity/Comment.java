@@ -39,6 +39,12 @@ public class Comment implements Serializable {
     private Long articleId;
 
     /**
+     * 文章标题
+     */
+    @TableField("article_title")
+    private String articleTitle;
+
+    /**
      * 昵称
      */
     private String name;
@@ -47,7 +53,7 @@ public class Comment implements Serializable {
      * 给谁留言
      */
     @TableField("c_name")
-    private String cName;
+    private String forWho;
 
     /**
      * 留言时间

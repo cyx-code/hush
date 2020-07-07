@@ -134,8 +134,17 @@ document.querySelector('#comment-form').addEventListener('submit',function(e){
     e.preventDefault();
 },false);
 
-//回复
+// 回复
 function reply(pId, cName) {
     $("#pId").val(pId);
     $("#cName").val(cName);
+    $('#response-name').text("@" + cName);
+    $("#cancel-comment-reply-link").show();
+}
+// 取消回复
+function cancelReply() {
+    $("#cancel-comment-reply-link").hide();
+    $('#response-name').text("");
+    $("#pId").val("");
+    $("#cName").val("");
 }

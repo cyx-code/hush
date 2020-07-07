@@ -1,6 +1,7 @@
-package com.blog.hush.controller;
+package com.blog.hush.controller.api;
 
 import com.blog.hush.common.utils.R;
+import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Tag;
 import com.blog.hush.service.TagService;
 import io.swagger.annotations.Api;

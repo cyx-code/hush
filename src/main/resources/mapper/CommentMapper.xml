@@ -11,7 +11,7 @@
     <result column="article_id" property="articleId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="c_name" property="cName" jdbcType="VARCHAR" />
-    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="time" property="time" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="sort" property="sort" jdbcType="BIGINT" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />

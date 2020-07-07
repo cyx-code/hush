@@ -9,7 +9,7 @@
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
     <result column="location" property="location" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" />
     <result column="device" property="device" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

@@ -12,7 +12,7 @@
     <result column="method" property="method" jdbcType="VARCHAR" />
     <result column="params" property="params" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" />
     <result column="location" property="location" jdbcType="VARCHAR" />
   </resultMap>
 </mapper>

@@ -18,6 +18,7 @@ import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         comment.setIp(ip);
         comment.setAddress(address);
         comment.setTime(new Date());
-        comment.setDevice(browser.getName() + "||" + operatingSystem.getName());
+        comment.setDevice(browser.getName() + " in " + operatingSystem.getName());
         int count = commentMapper.insert(comment);
         return count > 0;
     }
@@ -68,8 +69,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         queryWrapper.eq(StringUtils.isNotBlank(articleId), Comment::getArticleId, articleId);
         queryWrapper.eq(Comment::getSort, sort);
         queryWrapper.orderByDesc(Comment::getId);
+        // 先将所有评论查出来
         List<Comment> comments = commentMapper.selectList(queryWrapper);
         List<Tree<Comment>> commentsTree = new ArrayList<>();
+        // 封装成评论树
         comments.forEach(c -> {
             Tree<Comment> tree = new Tree<>();
             tree.setId(c.getId());
@@ -77,7 +80,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             tree.setPId(c.getPId());
             tree.setContent(c.getContent());
             tree.setName(c.getName());
-            tree.setTarget(c.getCName());
+            tree.setTarget(c.getForWho());
             tree.setDevice(c.getDevice());
             tree.setTime(c.getTime());
             tree.setSort(c.getSort());
@@ -85,6 +88,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         });
         HashMap<String, Object> map = new HashMap<>();
         try {
+            // 构建评论树
             List<Tree<Comment>> treeList = TreeUtil.build(commentsTree);
             if (treeList == null) {
                 treeList = new ArrayList<>();
@@ -102,7 +106,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             map.put("count", comments.size());
             map.put("total", treeList.size());
             map.put("current", queryPage.getPage());
-            map.put("pages", (int) Math.ceil(treeList.size() / queryPage.getLimit()));
+            int num = treeList.size() % queryPage.getLimit();
+            int pages = num == 0 ? treeList.size() / queryPage.getLimit() : treeList.size() / queryPage.getLimit() + 1;
+            map.put("pages", pages);
         } catch (Exception e) {
             throw new GlobalException(e.getMessage());
         }

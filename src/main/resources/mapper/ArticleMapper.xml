@@ -12,9 +12,9 @@
     <result column="category" property="category" jdbcType="VARCHAR" />
     <result column="origin" property="origin" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="VARCHAR" />
-    <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
-    <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="publish_time" property="publishTime"/>
+    <result column="edit_time" property="editTime"/>
+    <result column="create_time" property="createTime"/>
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="content_md" property="contentMd" jdbcType="LONGVARCHAR" />

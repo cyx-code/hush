@@ -31,4 +31,6 @@ public interface SiteConstants {
     String COMMENTS_MODEL = "comments";
 
     int COMMENT_SORT_ARTICLE = 0;
+
+    int DEFAULT_COMMENT_LIMIT = 4;
 }

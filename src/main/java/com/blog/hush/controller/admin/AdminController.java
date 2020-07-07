@@ -31,7 +31,7 @@ public class AdminController extends BaseController {
     private QiNiuUtil qiNiuUtil;
 
 
-    @GetMapping("/")
+    @GetMapping()
     public String home() {
         return "admin/home";
     }
@@ -48,7 +48,10 @@ public class AdminController extends BaseController {
         model.addAttribute("categories", categories);
         return "admin/article/list";
     }
-
+    @GetMapping("/comment")
+    public String list() {
+        return "admin/comment/list";
+    }
     @PostMapping("/article/upload")
     @ResponseBody
     public Map upload(MultipartFile file) {

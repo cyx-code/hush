@@ -1,6 +1,7 @@
 package com.blog.hush.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,8 +9,8 @@ import com.blog.hush.common.constants.CommonConstants;
 import com.blog.hush.entity.*;
 import com.blog.hush.mapper.*;
 import com.blog.hush.service.ArticleService;
+import com.blog.hush.vo.Archive;
 import com.blog.hush.vo.ArticleVo;
-import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
@@ -52,19 +53,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.eq(Article::getState, CommonConstants.DEFAULT_RELEASE_STATUS);
         IPage<Article> list = articleMapper.selectPage(page, queryWrapper);
         List<Category> categories = categoryMapper.selectList(null);
-        Map<Long, String> categoryMap = new HashMap<>(categories.size());
+        Map<Long, Category> categoryMap = new HashMap<>(categories.size());
         categories.forEach(category -> {
-            categoryMap.put(category.getId(), category.getIcon());
+            categoryMap.put(category.getId(), category);
         });
         list.getRecords().forEach(article -> {
             String content = Jsoup.parse(article.getContent()).text();
             if (content.length() > 50) {
                 content = content.substring(0, 40) + "...";
             }
-            article.setBgIco(categoryMap.get(article.getCategory()));
+            article.setBgIco(categoryMap.get(article.getCategory()).getIcon());
             article.setContent(content);
+            article.setCategoryName(categoryMap.get(article.getCategory()).getName());
             article.setContentMd(null);
-            article.setCategory(null);
         });
 
         return list;
@@ -225,5 +226,36 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Archive> listGroupByMonth() {
+        List<ArticleVo> articleVos = articleMapper.listArchives();
+        Map<String, List<ArticleVo>> map = new HashMap<>();
+        articleVos.forEach(articleVo -> {
+            if (map.containsKey(articleVo.getMonth())) {
+                List<ArticleVo> exist = map.get(articleVo.getMonth());
+                exist.add(articleVo);
+            } else {
+                map.put(articleVo.getMonth(), new ArrayList<>(Arrays.asList(articleVo)));
+            }
+        });
+        Set<String> set = map.keySet();
+        List<Archive> archives=  new ArrayList<>();
+        for (String month : set) {
+            Archive archive = new Archive();
+            archive.setMonth(month);
+            archive.setArticles(map.get(month));
+            archives.add(archive);
+        }
+        return archives;
+    }
+
+    @Override
+    public List<Article> listByCategory(Long id, String page) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getCategory, id);
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+        return articles;
     }
 }

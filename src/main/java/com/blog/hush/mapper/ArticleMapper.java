@@ -13,4 +13,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
     Long insertAndBackId(@Param("article") Article article);
 
     List<ArticleVo> listArticleVo(@Param("start") long start, @Param("size") Long size);
+
+    List<ArticleVo> listArchives();
 }

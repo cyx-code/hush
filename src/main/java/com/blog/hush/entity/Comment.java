@@ -52,7 +52,7 @@ public class Comment implements Serializable {
     /**
      * 给谁留言
      */
-    @TableField("c_name")
+    @TableField("for_who")
     private String forWho;
 
     /**
@@ -63,9 +63,9 @@ public class Comment implements Serializable {
     private Date time;
 
     /**
-     * 邮箱
+     * 联系方式
      */
-    private String email;
+    private String contact;
 
     /**
      * 分类：0:默认，文章详情页，1:友链页，2:关于页

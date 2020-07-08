@@ -7,7 +7,7 @@ public interface SiteConstants {
     /**
      * 前台默认文章数
      */
-    int DEFAULT_PAGE_LIMIT = 12;
+    int DEFAULT_PAGE_LIMIT = 9;
     /**
      * 首页前端接受参数
      */

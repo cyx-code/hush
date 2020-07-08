@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>[[${article.title}]] - Tumo</title>
+    <title>[[${article.title}]] - Hush</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -52,7 +52,7 @@
             <input name="pid" id="pId" value="" style="display: none;">
             <input name="cname" id="cName" value="" style="display: none;">
             <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="Name (*)" value="" required="">
-            <input type="email" name="email" id="mail" class="form-control input-control clearfix" placeholder="Email (*)" value="">
+            <input type="text" name="email" class="form-control input-control clearfix" style="width: 50%;" placeholder="Contact" value="">
             <textarea name="content" id="textarea" class="form-control" placeholder="Your comment here. Be cool. " required=""></textarea>
             <button type="submit" class="submit" id="submit">SUBMIT</button>
         </form>

@@ -34,7 +34,7 @@
                         <div class="item-meta clearfix">
                             <div th:classappend="'item-meta-ico ' + ${article.bgIco}"
                                  style="background: url(/images/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
-                            <div class="item-meta-cat">[[${article.category}]]</div>
+                            <div class="item-meta-cat"><a th:href="'/category/' + ${article.category}">[[${article.categoryName}]]</a></div>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 package com.blog.hush.controller.site;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.CommonConstants;
@@ -7,9 +8,13 @@ import com.blog.hush.common.constants.SiteConstants;
 import com.blog.hush.common.utils.QueryPage;
 import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Article;
+import com.blog.hush.entity.Category;
 import com.blog.hush.entity.Comment;
 import com.blog.hush.service.ArticleService;
+import com.blog.hush.service.CategoryService;
 import com.blog.hush.service.CommentService;
+import com.blog.hush.vo.Archive;
+import com.blog.hush.vo.ArticleVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,11 +37,9 @@ public class SiteController extends BaseController {
     private ArticleService articleService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private CategoryService categoryService;
 
-    @GetMapping("/error/500")
-    public String error() {
-        return "error/500";
-    }
 
     /**
      * 初始化首页中的recent数据
@@ -78,7 +81,7 @@ public class SiteController extends BaseController {
     public String article(@PathVariable String id,
                           @RequestParam(name = "page", required = false) String page, Model model) {
         if (id == null) {
-            return this.error();
+            return "error/500";
         }
         try {
             if (StringUtils.isBlank(page)) {
@@ -99,5 +102,25 @@ public class SiteController extends BaseController {
             return "redirect:/error/500";
         }
         return "site/page/article";
+    }
+    @GetMapping("/archives")
+    public String archives(Model model) {
+        initModel(model);
+        List<Archive> archives = articleService.listGroupByMonth();
+        model.addAttribute("archives", archives);
+        return "site/page/archives";
+    }
+
+    @GetMapping("/category/{id}")
+    public String category(@PathVariable Long id,
+                           @RequestParam(name = "page", required = false) String page, Model model) {
+        if (StrUtil.isBlank(page)) {
+            page = "1";
+        }
+        List<Article> articleVos = articleService.listByCategory(id, page);
+        Category category = categoryService.getById(id);
+        model.addAttribute("category", category);
+        model.addAttribute("articles", articleVos);
+        return "site/page/category";
     }
 }

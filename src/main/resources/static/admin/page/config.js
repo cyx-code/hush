@@ -17,14 +17,14 @@ layui.define(function(exports) {
     //是否开启调试模式，开启的话接口异常会抛出异常 URL信息
     debug: layui.cache.debug,
     //网站名称
-    name: 'Tumo',
+    name: 'Hush',
     //默认视图文件名
     entry: '/index',
     //视图文件后缀名
     engine: '',
-    eventName: 'tumo-event',
+    eventName: 'hush-event',
     //本地存储表名
-    tableName: 'tumo',
+    tableName: 'hush',
     //request 基础URL
     requestUrl: './',
     //独立页面路由，可随意添加（无需写参数）

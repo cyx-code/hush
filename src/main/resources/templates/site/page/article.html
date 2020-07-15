@@ -24,7 +24,7 @@
     </div>
     <div id="post-content" class="post-content" itemprop="articleBody">
         <p class="post-tags" th:if="${article.tags} != null">
-            <a th:each="tag : ${article.tags}" href="#">[[${tag.name}]]</a>
+            <a th:each="tag : ${article.tags}" th:href="'/tag/' + ${tag.id}">[[${tag.name}]]</a>
         </p>
 
         <p th:utext="${article.content}"></p>
@@ -75,7 +75,7 @@
                         <div class="comment-meta">
                             <time class="comment-time">[[${parent.time}]]</time>
                             <span class="comment-reply">
-                                 <a href="" rel="nofollow" th:onclick="reply([[${parent.id}]], [[${parent.name}]]);">Reply</a>
+                                 <a rel="nofollow" th:onclick="reply([[${parent.id}]], [[${parent.name}]]);">Reply</a>
                             </span>
                         </div>
                     </div>

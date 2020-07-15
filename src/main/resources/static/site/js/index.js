@@ -8,6 +8,10 @@ var header = new Headroom(document.getElementById("header"), {
     }
 });
 header.init();
+var navbarMobileSwith = document.getElementById("navbar-mobile-swith");
+navbarMobileSwith.onclick = function() {
+    navbarMobileSwith.classList.toggle("navbar-mobile-menu-on");
+};
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function () {
         FastClick.attach(document.body);

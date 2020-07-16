@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>hush</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" th:href="@{/images/logo.jpeg}">
+    <link rel="stylesheet" data-th-href="@{/site/css/style.min.css}"/>
+</head>
+<body class="bg-grey">
+<div th:replace="site/common/header"></div>
+<div class="main-content page-page">
+    <div class="search-page">
+        <form id="search" class="search-form" method="post" action="/search" role="search">
+            <span class="search-box clearfix">
+                <input type="text" id="input" class="input" name="s" required="true" placeholder="Search..." maxlength="30" autocomplete="off">
+                <button type="submit" class="spsubmit"><i class="icon-search"></i></button>
+            </span>
+        </form>
+        <div class="search-tags" >
+            <a th:href="'/tag/' + ${tag.id}" th:classappend="${tag.color}" th:each="tag : ${tags}">#[[${tag.name}]] [[${tag.count}]]</a>
+            <div th:classappend="'search-tags-hr ' + ${color}"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/site/js/search.js}"></script>
+</html>

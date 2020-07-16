@@ -10,22 +10,21 @@ import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Article;
 import com.blog.hush.entity.Category;
 import com.blog.hush.entity.Comment;
+import com.blog.hush.entity.Tag;
 import com.blog.hush.service.ArticleService;
 import com.blog.hush.service.CategoryService;
 import com.blog.hush.service.CommentService;
+import com.blog.hush.service.TagService;
 import com.blog.hush.vo.Archive;
-import com.blog.hush.vo.ArticleVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * 博客前台控制层
@@ -39,6 +38,8 @@ public class SiteController extends BaseController {
     private CommentService commentService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private TagService tagService;
 
 
     /**
@@ -114,6 +115,7 @@ public class SiteController extends BaseController {
     @GetMapping("/category/{id}")
     public String category(@PathVariable Long id,
                            @RequestParam(name = "page", required = false) String page, Model model) {
+        initModel(model);
         if (StrUtil.isBlank(page)) {
             page = "1";
         }
@@ -122,5 +124,35 @@ public class SiteController extends BaseController {
         model.addAttribute("category", category);
         model.addAttribute("articles", articleVos);
         return "site/page/category";
+    }
+    @GetMapping("/tag/{id}")
+    public String tag(@PathVariable Long id,
+                           @RequestParam(name = "page", required = false) String page, Model model) {
+        initModel(model);
+        if (StrUtil.isBlank(page)) {
+            page = "1";
+        }
+        List<Article> articles = articleService.listByTag(id, page);
+        Tag tag = tagService.getById(id);
+        model.addAttribute("tag", tag);
+        model.addAttribute("articles", articles);
+        return "site/page/tag";
+    }
+    @GetMapping("/search")
+    public String toSearch(Model model) {
+        initModel(model);
+        Random random = new Random();
+        List<Tag> tags = tagService.listTags();
+        tags.forEach(tag -> {
+            int i = random.nextInt(SiteConstants.COLORS.length);
+            tag.setColor(SiteConstants.COLORS[i]);
+        });
+        model.addAttribute("tags", tags);
+        model.addAttribute("color", SiteConstants.COLORS[random.nextInt(SiteConstants.COLORS.length)]);
+        return "site/page/search";
+    }
+    @PostMapping("/search")
+    public String search() {
+        return "";
     }
 }

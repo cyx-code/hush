@@ -1,5 +1,6 @@
 package com.blog.hush.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.enums.CommonEnum;
@@ -41,7 +42,7 @@ public class CommentController {
     }
     @DeleteMapping("/{id}")
     public R delete(@PathVariable Long id) {
-        boolean result = commentService.removeById(id);
+        boolean result = commentService.deleteComments(id);
         return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
 }

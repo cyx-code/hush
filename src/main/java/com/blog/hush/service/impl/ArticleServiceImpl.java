@@ -258,4 +258,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<Article> articles = articleMapper.selectList(queryWrapper);
         return articles;
     }
+
+    @Override
+    public List<Article> listByTag(Long id, String page) {
+        return articleMapper.listByTag(id);
+    }
 }

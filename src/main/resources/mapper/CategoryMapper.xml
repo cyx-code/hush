@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.hush.mapper.CategoryMapper" >
+    <select id="pageCategories" parameterType="com.blog.hush.common.utils.QueryPage" resultType="com.blog.hush.entity.Category">
+        select
+            c.id,
+            c.NAME,
+            c.icon,
+            ifnull( t.articleCount, 0 ) as articleCount
+        from
+            tb_category c
+            left join ( select count(*) as articleCount, category_id from tb_article_category group by category_id ) t on c.id = t.category_id
+        limit #{page}, #{limit}
+    </select>
 </mapper>

@@ -33,4 +33,9 @@ public interface SiteConstants {
     int COMMENT_SORT_ARTICLE = 0;
 
     int DEFAULT_COMMENT_LIMIT = 4;
+
+    /**
+     * 搜索页标签颜色
+     */
+    String[] COLORS = {"bg-red", "bg-yellow", "bg-green", "bg-blue", "bg-purple", "bg-grey", "bg-white", "bg-orange"};
 }

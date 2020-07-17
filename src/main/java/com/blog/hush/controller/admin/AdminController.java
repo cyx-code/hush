@@ -31,7 +31,7 @@ public class AdminController extends BaseController {
     private QiNiuUtil qiNiuUtil;
 
 
-    @GetMapping()
+    @GetMapping({"", "/home"})
     public String home() {
         return "admin/home";
     }
@@ -50,8 +50,14 @@ public class AdminController extends BaseController {
     }
     @GetMapping("/comment")
     public String list() {
-        return "admin/comment/list";
+        return "admin/comment/comment";
     }
+    @GetMapping("/category")
+    public String category() {
+        return "admin/category/category";
+    }
+    @GetMapping("/tag")
+    public String tag() { return "admin/tag/tag"; }
     @PostMapping("/article/upload")
     @ResponseBody
     public Map upload(MultipartFile file) {
@@ -76,7 +82,7 @@ public class AdminController extends BaseController {
     public String login(User user, Model model) {
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         Subject subject = SecurityUtils.getSubject();
-        HashMap<Object, Object> result = new HashMap<>();
+        HashMap<String, CommonEnum> result = new HashMap<>();
         try {
             subject.login(token);
             result.put("result", CommonEnum.COMMON_SUCCESS);
@@ -85,6 +91,6 @@ public class AdminController extends BaseController {
             result.put("result", CommonEnum.LOGIN_ERROR);
         }
         model.addAttribute("result", result);
-        return subject.isAuthenticated() ? "/admin/home" : "/admin/login";
+        return result.get("result").getCode() == 200 ? "redirect:/admin/home" : "/admin/login";
     }
 }

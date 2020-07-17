@@ -62,7 +62,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return count > 0;
     }
 
-    // todo 文章详情页面显示评论数据
+    @Override
+    @Transactional
+    public boolean deleteComments(Long id) {
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getPId, id);
+        commentMapper.delete(wrapper);
+        commentMapper.deleteById(id);
+        return false;
+    }
+
     @Override
     public Map<String, Object> listComments(QueryPage queryPage, String articleId, int sort) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
@@ -114,5 +123,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         return map;
     }
+
 
 }

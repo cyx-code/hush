@@ -11,9 +11,9 @@ public class QueryPage {
     /**
      * 每页多少条
      */
-    private int limit;
+    private Integer limit;
     /**
      * 当前页
      */
-    private int page;
+    private Integer page;
 }

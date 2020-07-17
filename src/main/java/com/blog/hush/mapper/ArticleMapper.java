@@ -15,4 +15,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<ArticleVo> listArticleVo(@Param("start") long start, @Param("size") Long size);
 
     List<ArticleVo> listArchives();
+
+    List<Article> listByTag(@Param("tag") Long tag);
 }

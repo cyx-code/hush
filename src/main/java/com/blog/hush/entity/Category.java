@@ -2,6 +2,7 @@ package com.blog.hush.entity;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -26,5 +27,11 @@ public class Category {
      * 分类标签
      */
     private String icon;
+
+    /**
+     * 文章数目
+     */
+    @TableField(exist = false)
+    private Integer articleCount;
 
 }

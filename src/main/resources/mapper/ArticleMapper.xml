@@ -66,4 +66,20 @@
       #{article.category},#{article.origin},#{article.state},#{article.publishTime},
       #{article.editTime},#{article.createTime},#{article.type},#{article.content},#{article.contentMd})
   </insert>
+    <select id="listByTag" resultType="com.blog.hush.entity.Article">
+        SELECT
+            a.id,
+            title,
+            publish_time ,
+            c.icon as bgIco
+        FROM
+            tb_article_tag t
+            LEFT JOIN tb_article a ON t.article_id = a.id
+            left join tb_article_category ac on a.id = ac.article_id
+            LEFT JOIN tb_category c on c.id = ac.category_id
+        WHERE
+            t.tag_id = #{tag}
+        ORDER BY
+            a.publish_time DESC
+    </select>
 </mapper>

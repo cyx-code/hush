@@ -14,7 +14,7 @@
     <div class="layui-header">
         <div class="layui-logo">Hush</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
+       <!-- <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a href="">控制台</a></li>
             <li class="layui-nav-item"><a href="">商品管理</a></li>
             <li class="layui-nav-item"><a href="">用户</a></li>
@@ -39,14 +39,14 @@
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="">退了</a></li>
-        </ul>
+        </ul>-->
     </div>
 
     <div th:replace="admin/common/left-nav"/>
 
 
     <div class="layui-body">
-        <table class="layui-hide" id="articles" lay-filter="articles"></table>
+        <table class="layui-hide" id="comments" lay-filter="comments"></table>
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
@@ -55,7 +55,7 @@
         </script>
 
         <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="look">查看</a>
+            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
@@ -63,7 +63,7 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        © hush.com - 底部固定区域
+        © hush.com
     </div>
 </div>
 <script type="text/javascript" data-th-src="@{/admin/lib/layui/layui.js}"></script>
@@ -74,7 +74,7 @@
     layui.use('table', function(){
         var table = layui.table;
         table.render({
-            elem: '#articles'
+            elem: '#comments'
             ,url:'/api/comment'
             ,cellMinWidth: 80
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
@@ -102,7 +102,7 @@
         });
 
         //头工具栏事件
-        table.on('toolbar(articles)', function(obj){
+        table.on('toolbar(comments)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'getCheckData':
@@ -120,7 +120,7 @@
             form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成
         });
         //监听行工具事件
-        table.on('tool(articles)', function(obj){
+        table.on('tool(comments)', function(obj){
             var data = obj.data;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){

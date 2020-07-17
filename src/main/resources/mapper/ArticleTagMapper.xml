@@ -26,4 +26,14 @@
           </foreach>
         </where>
     </delete>
+    <delete id="batchDeleteByArticle">
+        delete from
+        tb_article_tag
+        <where>
+            article_id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
 </mapper>

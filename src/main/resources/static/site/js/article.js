@@ -140,6 +140,7 @@ function reply(pId, cName) {
     $("#cName").val(cName);
     $('#response-name').text("@" + cName);
     $("#cancel-comment-reply-link").show();
+    $("#comments")[0].scrollIntoView();
 }
 // 取消回复
 function cancelReply() {

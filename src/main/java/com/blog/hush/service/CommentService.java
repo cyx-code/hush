@@ -14,4 +14,6 @@ public interface CommentService extends IService<Comment> {
     Map<String, Object> listComments(QueryPage queryPage, String id, int commentSortArticle);
 
     boolean insertOne(Comment comment, HttpServletRequest request);
+
+    boolean deleteComments(Long id);
 }

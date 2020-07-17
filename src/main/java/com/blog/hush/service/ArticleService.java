@@ -26,4 +26,6 @@ public interface ArticleService extends IService<Article> {
     List<Archive> listGroupByMonth();
 
     List<Article> listByCategory(Long id, String page);
+
+    List<Article> listByTag(Long id, String page);
 }

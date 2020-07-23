@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <link rel="icon" th:href="@{/images/favicon.png}">
-    <link rel="stylesheet" data-th-href="@{/admin/lib/layui/css/layui.css}"/>
+    <link rel="stylesheet" data-th-href="@{/admin/lib/layui-v2.5.5/css/layui.css}"/>
 
     <style>
         html, body {width: 100%;height: 100%;overflow: hidden}
@@ -33,17 +33,17 @@
 <div class="layui-container">
     <div class="admin-login-background">
         <div class="layui-form login-form">
-            <form class="layui-form" action="/admin/login" method="post">
+            <form class="layui-form" id="login-form">
                 <div class="layui-form-item logo-title">
                     <h1>Hush</h1>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username"></label>
-                    <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱" autocomplete="off" class="layui-input" value="admin">
+                    <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱" autocomplete="off" class="layui-input" value="">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" ></label>
-                    <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="123456">
+                    <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="">
                 </div>
                 <!--<div class="layui-form-item">-->
                     <!--<label class="layui-icon layui-icon-vercode" for="captcha"></label>-->
@@ -56,15 +56,16 @@
                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
                 </div>
                 <div class="layui-form-item">
-                    <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
+                    <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" >登 入</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script data-th-src="@{/admin/lib/editormd/jquery.min.js}"></script>
-<script data-th-src="@{/admin/lib/layui/layui.js}"></script>
+<script data-th-src="@{/admin/lib/layui-v2.5.5/layui.js}" charset="utf-8"></script>
 <script data-th-src="@{/admin/lib/jq-module/jquery.particleground.min.js}"></script>
+<script data-th-src="@{/admin/lib/md5.min.js}"></script>
 <script>
     layui.use(['form'], function () {
         var form = layui.form,
@@ -80,27 +81,33 @@
                 lineColor:'#7ec7fd'
             });
         });
-
-        // // 进行登录操作
-        // form.on('submit(login)', function (data) {
-        //     data = data.field;
-        //     if (data.username == '') {
-        //         layer.msg('用户名不能为空');
-        //         return false;
-        //     }
-        //     if (data.password == '') {
-        //         layer.msg('密码不能为空');
-        //         return false;
-        //     }
-        //     if (data.captcha == '') {
-        //         layer.msg('验证码不能为空');
-        //         return false;
-        //     }
-        //     layer.msg('登录成功', function () {
-        //         //window.location = '../index.html';
-        //     });
-        //     return false;
-        // });
+        document.querySelector('#login-form').addEventListener('submit',function(e){
+            let fields = $("#login-form").serializeArray();
+            let data = {}
+            $.each(fields, function (index, field) {
+                if (field.name === 'password') {
+                    field.value = md5(field.value, "a1b2c3d4");
+                }
+                data[field.name] = field.value;
+            })
+            $.ajax({
+                type: 'post',
+                contentType: 'application/json;charset=utf-8',
+                url: '/admin/login',
+                data: JSON.stringify(data),
+                success: (res) => {
+                    if (res.code === 200) {
+                        window.location.href = '/admin';
+                    } else {
+                        layer.msg('登录失败，请重试')
+                    }
+                },
+                error: (res) => {
+                    console.log(res)
+                }
+            })
+            e.preventDefault();
+        },false);
     });
 </script>
 </body>

@@ -14,7 +14,8 @@ public enum CommonEnum {
     COMMON_ERROR(500, "系统内部错误"),
     FILE_ERROR(400, "上传的文件为空"),
     COMMON_SUCCESS(200, "成功"),
-    RESET_SUCCESS(200, "重置密码成功");
+    RESET_SUCCESS(200, "重置密码成功"),
+    PASSWORD_ERROR(500, "原密码不正确");
 
     private final int code;
     private final String msg;

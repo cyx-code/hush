@@ -1,5 +1,6 @@
 package com.blog.hush.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -75,7 +76,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public Map<String, Object> listComments(QueryPage queryPage, String articleId, int sort) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotBlank(articleId), Comment::getArticleId, articleId);
+        if (StrUtil.isNotBlank(articleId)) {
+            queryWrapper.eq(StringUtils.isNotBlank(articleId), Comment::getArticleId, articleId);
+        }
         queryWrapper.eq(Comment::getSort, sort);
         queryWrapper.orderByDesc(Comment::getId);
         // 先将所有评论查出来

@@ -1,0 +1,63 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "admin/welcome"
+  },
+  "logoInfo": {
+    "title": "HUSH"
+  },
+  "menuInfo": [
+    {
+      "title": "管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "主页",
+          "href": "admin/welcome",
+          "icon": "fa fa-home",
+          "target": "_self"
+        },
+        {
+          "title": "文章管理",
+          "href": "",
+          "icon": "fa fa-calendar",
+          "target": "_self",
+          "child": [
+            {
+              "title": "新增",
+              "href": "admin/article/add",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "管理",
+              "href": "admin/article/manager",
+              "icon": "fa fa-navicon",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "评论管理",
+          "href": "admin/comment/manager",
+          "icon": "fa fa-window-maximize",
+          "target": "_self"
+        },
+        {
+          "title": "分类管理",
+          "href": "admin/category/manager",
+          "icon": "fa fa-gears",
+          "target": "_self"
+        },
+        {
+          "title": "标签管理",
+          "href": "admin/tag/manager",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}

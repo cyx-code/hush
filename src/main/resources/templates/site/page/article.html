@@ -18,7 +18,7 @@
     <div class="post-header">
         <h1 class="post-title" itemprop="name headline"> [[${article.title}]] </h1>
         <div class="post-data">
-            <time datetime="2018-04-01T23:34:00+08:00" itemprop="datePublished">[[${article.publishTime}]]</time>
+            <time datetime="2018-04-01 23:34:00" itemprop="datePublished">[[${article.time}]]</time>
             in <a href="https://www.linpx.com/c/tutorials/">[[${article.categoryName}]]</a> with <a href="#comments"> 10 comments</a>
         </div>
     </div>
@@ -50,9 +50,9 @@
             <input name="articleTitle" th:value="${article.title}" style="display: none;">
             <input name="sort" value="0" style="display: none;">
             <input name="pid" id="pId" value="" style="display: none;">
-            <input name="cname" id="cName" value="" style="display: none;">
+            <input name="forWho" id="forWho" value="" style="display: none;">
             <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="Name (*)" value="" required="">
-            <input type="text" name="email" class="form-control input-control clearfix" placeholder="Contact" value="">
+            <input type="text" name="contact" class="form-control input-control clearfix" placeholder="Contact" value="">
 
             <textarea name="content" id="textarea" class="form-control" placeholder="Your comment here. Be cool. " required=""></textarea>
             <button type="submit" class="submit" id="submit">SUBMIT</button>
@@ -135,11 +135,11 @@
 <div id="floatMenu">
     <a href="javascript:;" class="btn-goTop"></a>
 </div>
-
+</body>
 <div th:replace="site/common/footer"></div>
 <script th:src="@{/site/lib/highlight.min.js}"></script>
 <script th:src="@{/admin/lib/editormd/jquery.min.js}"></script>
 <script th:src="@{/site/js/article.js}"></script>
-</body>
-
+<script th:src="@{/site/js/comment.js}"></script>
+<script th:src="@{/site/js/common.js}"></script>
 </html>

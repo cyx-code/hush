@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>hush</title>
+    <link rel="icon" th:href="@{/images/favicon.png}">
+    <link rel="stylesheet" data-th-href="@{/admin/lib/layui-v2.5.5/css/layui.css}"/>
+    <link rel="stylesheet" data-th-href="@{/admin/lib/editormd/css/editormd.css}" />
+    <link rel="stylesheet" data-th-href="@{/admin/page/css/admin.css}" />
+</head>
+<body>
+<div class="layuimini-container">
+    <table class="layui-hide" id="tags" lay-filter="tags"></table>
+
+    <script type="text/html" id="tagToolbar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="tagBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+</div>
+
+<div class="site-text" style="margin: 5%;  display: none" id="addTag">
+    <form class="layui-form" id="tagForm" style="width: 100%;" lay-filter="tagFilter">
+        <div class="layui-form-item">
+            <div class="layui-inline" style="width: 350px">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name"  lay-verify="required" placeholder="请输入标签名称" autocomplete="off" class="layui-input" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" data-th-src="@{/admin/lib/layui-v2.5.5/layui.js}"></script>
+<script data-th-src="@{/admin/lib/editormd/jquery.min.js}"></script>
+<script data-th-src="@{/admin/lib/axios/axios.min.js}" ></script>
+<script th:inline="none">
+    /*<![CDATA[*/
+    layui.use('table', function(){
+        var table = layui.table;
+        table.render({
+            elem: '#tags'
+            ,url:'/api/tag'
+            ,cellMinWidth: 80
+            ,toolbar: '#tagToolbar' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports']
+            ,title: '标签列表'
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                ,{field:'id', title:'ID', hide: true}
+                ,{field:'name', title:'标签', edit: 'text'}
+                ,{field:'count', title:'数量'}
+                ,{fixed:'right', title:'操作', toolbar: '#tagBar', width:150}
+            ]],
+            id: 'tagTable',
+            page: true,
+            limit: 20
+        });
+
+        //头工具栏事件
+        table.on('toolbar(tags)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'add':
+                    layer.open({
+                        type: 1 //Page层类型
+                        ,skin: 'layui-layer-molv'
+                        ,area: ['30%', '25%']
+                        ,title: ['添加标签','font-size:18px']
+                        ,btn: ['确定', '取消']
+                        ,shadeClose: true
+                        ,shade: 0 //遮罩透明度
+                        ,content: $("#addTag")  //弹窗路径
+                        ,success: function(layero,index){
+                            $('#tagForm')[0].reset();
+                        }, yes: function (index, layero) {
+                            const tag = form.val('tagFilter');
+                            axios.post('/api/tag', tag).then((response) => {
+                                // 根据后台返回的参数，来进行判断
+                                if (response.data.code == 200) {
+                                    layer.alert('添加成功',{icon: 1, title: '提示'}, function (i) {
+                                        layer.close(i);
+                                        layer.close(index);//关闭弹出层
+                                    });
+                                    table.reload('tagTable',{//重载表格
+                                        page:{
+                                            curr:1
+                                        }
+                                    })
+                                } else {
+                                    layer.msg(response.data.msg);
+                                }
+                            });
+                        }
+                    });
+                    break;
+            };
+        });
+        var form = null;
+        layui.use('form', function() {
+            form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成
+        });
+        //监听行工具事件
+        table.on('tool(tags)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'del'){
+                layer.confirm('确定要删除该标签吗？', function(index){
+                    obj.del();
+                    layer.close(index);
+                    axios.delete('/api/tag/'+data.id).then(response => {
+                        if (response.data.code === 200) {
+                            layer.msg('删除成功');
+                        } else {
+                            layer.msg('出了点小问题');
+                        }
+                    })
+                });
+            }
+            if (obj.event === 'edit') {
+                axios.put('/api/tag', data).then(response => {
+                    if (response.data.code === 200) {
+                        layer.msg("修改成功")
+                    } else {
+                        layer.msg("出了点小问题")
+                    }
+                })
+            }
+        });
+    });
+
+    /*]]>*/
+</script>
+</body>
+</html>

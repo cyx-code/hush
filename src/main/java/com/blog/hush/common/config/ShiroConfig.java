@@ -24,7 +24,7 @@ public class ShiroConfig {
         factoryBean.setSecurityManager(securityManager);
         factoryBean.setLoginUrl("/admin/login");
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-//        filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("/admin/logout", "logout");
         //静态资源，对应`/resources/static`文件夹下的资源
         filterChainDefinitionMap.put("/admin/js/**", "anon");
         filterChainDefinitionMap.put("/admin/lib/**", "anon");
@@ -34,7 +34,6 @@ public class ShiroConfig {
         //其他请求一律拦截，一般放在拦截器链的最后
         //区分`user`和`authc`拦截器区别：`user`拦截器允许登录用户和RememberMe的用户访问
         filterChainDefinitionMap.put("/admin/**", "user");
-
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;
 

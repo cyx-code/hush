@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>hush</title>
+    <link rel="icon" th:href="@{/images/favicon.png}">
+    <link rel="stylesheet" data-th-href="@{/admin/lib/layui-v2.5.5/css/layui.css}"/>
+    <link rel="stylesheet" data-th-href="@{/admin/lib/editormd/css/editormd.css}" />
+    <link rel="stylesheet" data-th-href="@{/admin/page/css/admin.css}" />
+</head>
+<body>
+    <div class="layuimini-container">
+        <form class="layui-form" id="articleForm">
+            <div class="layui-form-item">
+                <div class="layui-inline" style="width: 500px">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">栏目</label>
+                    <div class="layui-input-block">
+                        <select name="category" lay-verify="required"  >
+                            <option value=""></option>
+                            <option th:each="category : ${categories}"
+                                    th:value="${category.id}" th:text="${category.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">标签</label>
+                    <div class="layui-input-block">
+                        <div id="tags" class="xm-select-demo"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">公开</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="state" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" value="0" title="原创" checked>
+                        <input type="radio" name="type" value="1" title="转载">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面图</label>
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="img">点击上传</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片预览</label>
+                <input type="hidden" name="cover" id="cover"/>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="imgShow" width="200px" height="200px">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item" id="content">
+                <!-- 内容主体区域 -->
+                <textarea class="editormd-markdown-textarea" name="contentMd" style="display:none;"></textarea>
+                <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                <textarea class="editormd-html-textarea" name="content" style="display:none;"></textarea>
+            </div>
+            <div class="layui-form-item" id="handleButton">
+                <div class="layui-input-block" style="display: flex; align-items: center;">
+                    <div style="margin-left:auto; padding-right: 20px">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<script type="text/javascript" data-th-src="@{/admin/lib/layui-v2.5.5/layui.js}"></script>
+<script data-th-src="@{/admin/lib/editormd/jquery.min.js}"></script>
+<script data-th-src="@{/admin/lib/editormd/editormd.min.js}"></script>
+<script data-th-src="@{/admin/lib/axios/axios.min.js}" ></script>
+<script data-th-src="@{/admin/lib/xm-select.js}" ></script>
+<script data-th-src="@{/admin/js/admin.js}"></script>
+<script>
+    const contentMd = editormd("content", {
+        placeholder:'本编辑器支持Markdown编辑，左边编写，右边预览',  //默认显示的文字，这里就不解释了
+        width: "90%",
+        height: 640,
+        syncScrolling: "single",
+        path: "/admin/lib/editormd/lib/",   //你的path路径（原资源文件中lib包在我们项目中所放的位置）
+        saveHTMLToTextarea: true,
+        emoji: false,
+        taskList: true,
+        tocm: true,         // Using [TOCM]
+        tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+        flowChart: true,             // 开启流程图支持，默认关闭
+        sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+        toolbarIcons : function() {  //自定义工具栏，后面有详细介绍
+            return editormd.toolbarModes['simple']; // full, simple, mini
+        },
+        onfullscreen: function() {
+            $('#handleButton').hide();
+        },
+        onfullscreenExit: function() {
+            $('#handleButton').show();
+        }
+    });
+    layui.use('form', function(){
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            data.field.tags = tags.getValue();
+            data.field.state = "on" === data.field.state ? "1" : "0";
+            axios.post('/api/article/add', data.field).then(response => {
+                if (response.data.code == 200) {
+                    layer.alert('添加成功',{icon: 1, title: '提示'}, function (i) {
+                        layer.close(i);
+                        tags.setValue(new Array());
+                        contentMd.setMarkdown('')
+                        $("#articleForm")[0].reset();
+                        $('#imgShow').attr('src', '');
+                        $('#cover').val('');
+                    });
+                }
+            });
+            return false;
+        });
+    });
+
+
+
+</script>
+</body>
+</html>

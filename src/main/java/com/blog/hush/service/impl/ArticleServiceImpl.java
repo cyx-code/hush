@@ -1,7 +1,6 @@
 package com.blog.hush.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -44,7 +44,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public IPage<Article> prepareArticles(IPage<Article> page) {
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // lambda查询对象
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         // 设置查询条件是按照Article的id降序排列
@@ -58,6 +58,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             categoryMap.put(category.getId(), category);
         });
         list.getRecords().forEach(article -> {
+            article.setTime(sdf.format(article.getPublishTime()));
             String content = Jsoup.parse(article.getContent()).text();
             if (content.length() > 50) {
                 content = content.substring(0, 40) + "...";
@@ -78,7 +79,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     @Override
     public Article findById(Long id) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Article article = articleMapper.findById(id);
+        article.setTime(sdf.format(article.getPublishTime()));
         ArrayList<Article> articles = new ArrayList<>();
         articles.add(article);
         prepareArticle(articles);
@@ -253,14 +256,34 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<Article> listByCategory(Long id, String page) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Article::getCategory, id);
         List<Article> articles = articleMapper.selectList(queryWrapper);
+        articles.forEach(article -> {
+            article.setTime(sdf.format(article.getPublishTime()));
+        });
         return articles;
     }
 
     @Override
     public List<Article> listByTag(Long id, String page) {
-        return articleMapper.listByTag(id);
+        List<Article> articles = articleMapper.listByTag(id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        articles.forEach(article -> {
+            article.setTime(sdf.format(article.getPublishTime()));
+        });
+        return articles;
+
+    }
+
+    @Override
+    public List<Article> listByCondition(String condition) {
+        List<Article> articles = articleMapper.listByCondition(condition);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        articles.forEach(article -> {
+            article.setTime(sdf.format(article.getPublishTime()));
+        });
+        return articles;
     }
 }

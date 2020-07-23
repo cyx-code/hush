@@ -70,6 +70,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
         </dependency>
         <!--spring-aop支持-->
         <dependency>
@@ -249,6 +250,7 @@
     </dependencies>
 
     <build>
+        <finalName>hush</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -102,5 +102,7 @@ public class Article implements Serializable {
     private String bgIco;
     @TableField(exist = false)
     private String categoryName;
+    @TableField(exist = false)
+    private String time;
 
 }

@@ -3,10 +3,12 @@ package com.blog.hush.controller.admin;
 import com.blog.hush.common.constants.enums.CommonEnum;
 import com.blog.hush.common.utils.FileUtil;
 import com.blog.hush.common.utils.QiNiuUtil;
+import com.blog.hush.common.utils.R;
 import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Category;
 import com.blog.hush.entity.User;
 import com.blog.hush.service.CategoryService;
+import com.blog.hush.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,37 +30,59 @@ import java.util.Map;
 public class AdminController extends BaseController {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private UserService userService;
     @Resource
     private QiNiuUtil qiNiuUtil;
 
-
-    @GetMapping({"", "/home"})
-    public String home() {
-        return "admin/home";
+    @GetMapping({"", "/", "index"})
+    public String page() {
+        return "admin/index";
     }
 
-    @GetMapping("/article/write")
-    public String writeArticle(Model model) {
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "admin/welcome";
+    }
+
+    @GetMapping("/article/add")
+    public String addArticle(Model model) {
         List<Category> categories = categoryService.list();
         model.addAttribute("categories", categories);
-        return "admin/article/add";
+        return "admin/article-add";
     }
-    @GetMapping("/article/show")
-    public String showArticle(Model model) {
+
+    @GetMapping("/article/manager")
+    public String managerArticle(Model model) {
         List<Category> categories = categoryService.list();
         model.addAttribute("categories", categories);
-        return "admin/article/list";
+        return "admin/article-manager";
     }
-    @GetMapping("/comment")
-    public String list() {
-        return "admin/comment/comment";
+
+    @GetMapping("/comment/manager")
+    public String managerComment() {
+        return "admin/comment-manager";
     }
-    @GetMapping("/category")
-    public String category() {
-        return "admin/category/category";
+
+    @GetMapping("/category/manager")
+    public String managerCategory() {
+        return "admin/category-manager";
     }
-    @GetMapping("/tag")
-    public String tag() { return "admin/tag/tag"; }
+
+    @GetMapping("/tag/manager")
+    public String managerTag() { return "admin/tag-manager"; }
+
+    @GetMapping("/password")
+    public String password() {
+        return "admin/user-password";
+    }
+    @PostMapping("/modifyPassword")
+    @ResponseBody
+    public R modifyPassword(@RequestBody Map<String, String> map, HttpSession session) {
+        String username = session.getAttribute("username").toString();
+        return userService.modifyPassword(username, map);
+    }
+
     @PostMapping("/article/upload")
     @ResponseBody
     public Map upload(MultipartFile file) {
@@ -74,23 +99,32 @@ public class AdminController extends BaseController {
         }
         return result;
     }
+
     @GetMapping("/login")
     public String login() {
         return "admin/login";
     }
+
     @PostMapping("/login")
-    public String login(User user, Model model) {
+    @ResponseBody
+    public R login(@RequestBody User user, HttpSession session) {
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         Subject subject = SecurityUtils.getSubject();
-        HashMap<String, CommonEnum> result = new HashMap<>();
+        boolean flag;
         try {
             subject.login(token);
-            result.put("result", CommonEnum.COMMON_SUCCESS);
+            flag = true;
+            session.setAttribute("username", user.getUsername());
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            result.put("result", CommonEnum.LOGIN_ERROR);
+            flag = false;
         }
-        model.addAttribute("result", result);
-        return result.get("result").getCode() == 200 ? "redirect:/admin/home" : "/admin/login";
+        return flag ?  new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.LOGIN_ERROR);
+    }
+    @PostMapping("logout")
+    @ResponseBody
+    public R logout(HttpSession session) {
+        session.removeAttribute("username");
+        return new R(CommonEnum.COMMON_SUCCESS);
     }
 }

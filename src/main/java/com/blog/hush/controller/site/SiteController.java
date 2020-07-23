@@ -152,7 +152,20 @@ public class SiteController extends BaseController {
         return "site/page/search";
     }
     @PostMapping("/search")
-    public String search() {
-        return "";
+    public String search(String condition, Model model) {
+        model.addAttribute("condition", condition);
+        List<Article> articles = articleService.listByCondition(condition);
+        model.addAttribute("articles", articles);
+        return "site/page/search_page";
+    }
+    @GetMapping("/about")
+    public String about(Model model,
+                        @RequestParam(name = "page", required = false) String page) {
+        initModel(model);
+        int pageNum = StrUtil.isBlank(page) ? 1 : Integer.parseInt(page);
+        QueryPage queryPage = new QueryPage(SiteConstants.DEFAULT_COMMENT_LIMIT, pageNum);
+        Map<String, Object> comments = commentService.listComments(queryPage, null, SiteConstants.COMMENT_SORT_ABOUT);
+        model.addAttribute("comments", comments);
+        return "site/page/about";
     }
 }

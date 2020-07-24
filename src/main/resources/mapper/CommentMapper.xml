@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.hush.mapper.CommentMapper" >
   <select id="findAll" resultType="com.blog.hush.entity.Comment">
-      SELECT DISTINCT
+      SELECT
           c.content,
           c.NAME,
           c.article_id
@@ -11,6 +11,8 @@
           tb_comment c
       WHERE
           c.article_id IN ( SELECT id FROM tb_article )
-          AND a.state = #{state} LIMIT #{queryPage.page}, #{queryPage.limit}
+          AND a.state = #{state}
+          order by c.time desc
+          LIMIT #{queryPage.page}, #{queryPage.limit}
   </select>
 </mapper>

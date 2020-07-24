@@ -30,4 +30,6 @@ public interface ArticleService extends IService<Article> {
     List<Article> listByTag(Long id, String page);
 
     List<Article> listByCondition(String condition);
+
+    int sumHits();
 }

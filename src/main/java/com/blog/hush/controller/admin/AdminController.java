@@ -7,7 +7,9 @@ import com.blog.hush.common.utils.R;
 import com.blog.hush.controller.BaseController;
 import com.blog.hush.entity.Category;
 import com.blog.hush.entity.User;
+import com.blog.hush.service.ArticleService;
 import com.blog.hush.service.CategoryService;
+import com.blog.hush.service.CommentService;
 import com.blog.hush.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -30,8 +32,15 @@ import java.util.Map;
 public class AdminController extends BaseController {
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private CommentService commentService;
     @Resource
     private QiNiuUtil qiNiuUtil;
 
@@ -41,7 +50,14 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/welcome")
-    public String welcome() {
+    public String welcome(Model model) {
+        int articleCount = articleService.count();
+        int commentCount = commentService.count();
+        int hits = articleService.sumHits();
+
+        model.addAttribute("articleCount", articleCount);
+        model.addAttribute("commentCount", commentCount);
+        model.addAttribute("hits", hits);
         return "admin/welcome";
     }
 
@@ -124,6 +140,7 @@ public class AdminController extends BaseController {
     @PostMapping("logout")
     @ResponseBody
     public R logout(HttpSession session) {
+        SecurityUtils.getSubject().logout();
         session.removeAttribute("username");
         return new R(CommonEnum.COMMON_SUCCESS);
     }

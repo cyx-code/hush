@@ -96,13 +96,38 @@ public class Article implements Serializable {
     @TableField("content_md")
     private String contentMd;
 
+    /**
+     * 点击量
+     */
+    private Integer hits;
+
+    /**
+     * 文章对应的标签
+     */
     @TableField(exist = false)
     private List<Tag> tags;
+
+    /**
+     * 文章分类对应的图标
+     */
     @TableField(exist = false)
     private String bgIco;
+
+    /**
+     * 分类对应的名称
+     */
     @TableField(exist = false)
     private String categoryName;
+
+    /**
+     * 格式化的发布时间
+     */
     @TableField(exist = false)
     private String time;
 
+    /**
+     * 格式化的编辑时间
+     */
+    @TableField(exist = false)
+    private String lastEditTime;
 }

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -84,6 +85,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 先将所有评论查出来
         List<Comment> comments = commentMapper.selectList(queryWrapper);
         List<Tree<Comment>> commentsTree = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 封装成评论树
         comments.forEach(c -> {
             Tree<Comment> tree = new Tree<>();
@@ -94,7 +96,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             tree.setName(c.getName());
             tree.setTarget(c.getForWho());
             tree.setDevice(c.getDevice());
-            tree.setTime(c.getTime());
+            tree.setTime(sdf.format(c.getTime()));
             tree.setSort(c.getSort());
             commentsTree.add(tree);
         });

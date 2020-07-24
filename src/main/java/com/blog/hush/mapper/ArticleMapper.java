@@ -19,4 +19,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<Article> listByTag(@Param("tag") Long tag);
 
     List<Article> listByCondition(String condition);
+
+    int sumHits();
 }

@@ -15,7 +15,8 @@
       a.create_time,
       a.type,
       a.content,
-      a.content_md
+      a.content_md,
+      a.hits
     FROM
         tb_article a
         LEFT JOIN tb_article_category ac ON a.id = ac.article_id
@@ -97,5 +98,9 @@
           a.title like "%"#{condition}"%"
           or a.content like "%"#{content}"%"
           and a.state = "1"
+    </select>
+
+    <select id="sumHits" resultType="int" >
+        select sum(hits) from tb_article
     </select>
 </mapper>

@@ -35,7 +35,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<Article> listRecentArticles() {
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(Article::getId);
+        wrapper.orderByDesc(Article::getPublishTime);
         wrapper.eq(Article::getState, CommonConstants.DEFAULT_RELEASE_STATUS);
         IPage<Article> page = new Page<>(0, 8);
         IPage<Article> list = articleMapper.selectPage(page, wrapper);
@@ -82,6 +82,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Article article = articleMapper.findById(id);
         article.setTime(sdf.format(article.getPublishTime()));
+        article.setLastEditTime(sdf.format(article.getEditTime()));
         ArrayList<Article> articles = new ArrayList<>();
         articles.add(article);
         prepareArticle(articles);
@@ -285,5 +286,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setTime(sdf.format(article.getPublishTime()));
         });
         return articles;
+    }
+
+    @Override
+    public int sumHits() {
+        return articleMapper.sumHits();
     }
 }

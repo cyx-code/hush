@@ -1,6 +1,7 @@
 package com.blog.hush.controller.site;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.CommonConstants;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.*;
 
 /**
  * 博客前台控制层
@@ -41,6 +43,12 @@ public class SiteController extends BaseController {
     @Autowired
     private TagService tagService;
 
+    ExecutorService threadPool = new ThreadPoolExecutor(2,
+            2, 3,
+            TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(10),
+            Executors.defaultThreadFactory(),
+            new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * 初始化首页中的recent数据
@@ -98,6 +106,11 @@ public class SiteController extends BaseController {
             Map comments = commentService.listComments(queryPage, id, SiteConstants.COMMENT_SORT_ARTICLE);
             model.addAttribute(SiteConstants.COMMENTS_MODEL, comments);
             initModel(model);
+            threadPool.execute(() -> {
+                LambdaUpdateWrapper<Article> wrapper = new LambdaUpdateWrapper<>();
+                wrapper.eq(Article::getId, article.getId()).set(Article::getHits, article.getHits() + 1);
+                articleService.update(wrapper);
+            });
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/error/500";

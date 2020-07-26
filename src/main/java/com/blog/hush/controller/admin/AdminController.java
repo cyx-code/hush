@@ -58,7 +58,7 @@ public class AdminController extends BaseController {
         int commentCount = commentService.count();
         int hits = articleService.sumHits();
         List<Article> articles = articleService.listRecentArticles(5);
-        List<Comment> comments = commentService.listComments(new QueryPage(5, 0));
+        List<Comment> comments = commentService.listComments(new QueryPage(8, 0));
         model.addAttribute("articleCount", articleCount);
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("hits", hits);

@@ -32,9 +32,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Override
-    public List<Comment> listRecentComments() {
-        List<Comment> comments = commentMapper.findAll(CommonConstants.DEFAULT_RELEASE_STATUS, new QueryPage(8, 0));
+    public List<Comment> listRecentComments(int count) {
+        List<Comment> comments = commentMapper.findAll(CommonConstants.DEFAULT_RELEASE_STATUS, new QueryPage(count, 0));
         return comments;
+    }
+
+    @Override
+    public List<Comment> listComments(QueryPage queryPage) {
+        return commentMapper.listComments(queryPage);
     }
 
     /**

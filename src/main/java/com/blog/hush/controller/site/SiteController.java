@@ -55,13 +55,13 @@ public class SiteController extends BaseController {
      * @param model
      */
     private void initModel(Model model) {
-        List<Article> articles = articleService.listRecentArticles();
+        List<Article> articles = articleService.listRecentArticles(8);
         articles.forEach(article -> {
             article.setContent(null);
             article.setContentMd(null);
         });
         model.addAttribute(SiteConstants.RECENT_POSTS, articles);
-        List<Comment> comments = commentService.listRecentComments();
+        List<Comment> comments = commentService.listRecentComments(8);
         model.addAttribute(SiteConstants.RECENT_COMMENTS, comments);
     }
 

@@ -3,9 +3,12 @@ package com.blog.hush.controller.admin;
 import com.blog.hush.common.constants.enums.CommonEnum;
 import com.blog.hush.common.utils.FileUtil;
 import com.blog.hush.common.utils.QiNiuUtil;
+import com.blog.hush.common.utils.QueryPage;
 import com.blog.hush.common.utils.R;
 import com.blog.hush.controller.BaseController;
+import com.blog.hush.entity.Article;
 import com.blog.hush.entity.Category;
+import com.blog.hush.entity.Comment;
 import com.blog.hush.entity.User;
 import com.blog.hush.service.ArticleService;
 import com.blog.hush.service.CategoryService;
@@ -54,10 +57,13 @@ public class AdminController extends BaseController {
         int articleCount = articleService.count();
         int commentCount = commentService.count();
         int hits = articleService.sumHits();
-
+        List<Article> articles = articleService.listRecentArticles(5);
+        List<Comment> comments = commentService.listComments(new QueryPage(5, 0));
         model.addAttribute("articleCount", articleCount);
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("hits", hits);
+        model.addAttribute("articles", articles);
+        model.addAttribute("comments", comments);
         return "admin/welcome";
     }
 

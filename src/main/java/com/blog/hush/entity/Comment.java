@@ -91,4 +91,10 @@ public class Comment implements Serializable {
      * 留言内容
      */
     private String content;
+
+    /**
+     * 格式化的评论时间
+     */
+    @TableField(exist = false)
+    private String commentTime;
 }

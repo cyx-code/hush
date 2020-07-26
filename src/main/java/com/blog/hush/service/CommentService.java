@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public interface CommentService extends IService<Comment> {
-    List<Comment> listRecentComments();
+
+    List<Comment> listRecentComments(int count);
 
     Map<String, Object> listComments(QueryPage queryPage, String id, int commentSortArticle);
 
     boolean insertOne(Comment comment, HttpServletRequest request);
 
     boolean deleteComments(Long id);
+
+    List<Comment> listComments(QueryPage queryPage);
 }

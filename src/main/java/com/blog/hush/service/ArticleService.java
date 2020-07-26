@@ -9,7 +9,7 @@ import com.blog.hush.vo.ArticleVo;
 import java.util.List;
 
 public interface ArticleService extends IService<Article> {
-    List<Article> listRecentArticles();
+    List<Article> listRecentArticles(int count);
 
     IPage<Article> prepareArticles(IPage<Article> page);
 

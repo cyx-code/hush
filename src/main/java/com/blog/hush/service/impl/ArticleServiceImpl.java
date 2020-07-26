@@ -33,11 +33,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private TagMapper tagMapper;
 
     @Override
-    public List<Article> listRecentArticles() {
+    public List<Article> listRecentArticles(int count) {
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(Article::getPublishTime);
         wrapper.eq(Article::getState, CommonConstants.DEFAULT_RELEASE_STATUS);
-        IPage<Article> page = new Page<>(0, 8);
+        IPage<Article> page = new Page<>(0, count);
         IPage<Article> list = articleMapper.selectPage(page, wrapper);
         return list.getRecords();
     }

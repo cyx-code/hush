@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="icon" th:href="@{/images/logo.jpeg}">
     <link rel="stylesheet" data-th-href="@{/site/css/style.min.css}"/>
+    <link rel="stylesheet" data-th-href="@{/site/css/about.css}"/>
 </head>
 <body>
 <div th:replace="site/common/header"></div>
@@ -33,8 +34,9 @@
             <li><p><a href="" target="_blank">Blog</a></p></li>
             <li><p><a href="https://github.com/cyx-code/" target="_blank">Github</a></p></li>
             <li><p><a href="https://leetcode-cn.com/u/ioroi/" target="_blank">LeetCode</a></p></li>
-            <li><p>微信: cyx1741914950</p></li>
+            <li><p>微信:<a id="showWeChat">点我</a></p></li>
         </ul>
+    </div>
 </article>
 
 <div id="respond-post-334" class="comment-container">
@@ -124,8 +126,21 @@
     </div>
 </div>
 
+<!-- 弹窗 -->
+<div id="weChatModal" class="modal">
+
+    <!-- 关闭按钮 -->
+    <span class="close" onclick="document.getElementById('weChatModal').style.display='none'">&times;</span>
+
+    <!-- 弹窗内容 -->
+    <img class="modal-content" id="weChatImg">
+</div>
 <div th:replace="site/common/footer"></div>
 <script th:src="@{/admin/lib/editormd/jquery.min.js}"></script>
 <script th:src="@{/site/js/comment.js}"></script>
+<script th:src="@{/site/js/about.js}"></script>
 </body>
+<script type="text/javascript">
+
+</script>
 </html>

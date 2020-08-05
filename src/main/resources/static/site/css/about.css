@@ -55,7 +55,7 @@
 .close {
     z-index: 999; /* Sit on top */
     position: absolute;
-    top: -24px;
+    top: -26px;
     right: -22px;
     color: #d7d7d7;
     font-size: 40px;

@@ -50,6 +50,6 @@ public class ArticleController extends BaseController {
     @DeleteMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
         boolean result = articleService.delete(id);
-        return new R(CommonEnum.COMMON_SUCCESS);
+        return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
 }

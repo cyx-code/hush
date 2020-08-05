@@ -19,7 +19,7 @@
         <h1 class="post-title" itemprop="name headline"> [[${article.title}]] </h1>
         <div class="post-data">
             <time datetime="2018-04-01 23:34:00" itemprop="datePublished">[[${article.time}]]</time>
-            in <a href="https://www.linpx.com/c/tutorials/">[[${article.categoryName}]]</a> with <a href="#comments"> 10 comments</a>
+            in <a href="https://www.linpx.com/c/tutorials/">[[${article.categoryName}]]</a> with <a> [[${commentsCount}]] comments</a>
         </div>
     </div>
     <div id="post-content" class="post-content" itemprop="articleBody">
@@ -30,20 +30,18 @@
         <p th:utext="${article.content}"></p>
 
         <p class="post-info">
-            本文由 <a href="/">[[${article.author}]]</a> 创作，采用
-            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="external nofollow">知识共享署名4.0</a>
-            国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为: [[${article.lastEditTime}]]
+            <br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请注明出处<br>最后编辑时间为: [[${article.lastEditTime}]]
         </p>
     </div>
 </article>
 
 <div id="respond-post-334" class="comment-container">
     <div id="comments" class="clearfix">
-        <span class="response" id="response">Responses
+        <span class="response" id="response">回复
             <span id="response-name" style="color: red"></span>
             <button id="cancel-comment-reply-link"
                rel="nofollow" style="display:none"
-               onclick="return cancelReply();"> / Cancel Reply</button>
+               onclick="return cancelReply();"> / Cancel</button>
         </span>
         <form id="comment-form" class="comment-form" role="form">
             <input name="articleId" th:value="${article.id}" style="display: none;">
@@ -51,10 +49,10 @@
             <input name="sort" value="0" style="display: none;">
             <input name="pid" id="pId" value="" style="display: none;">
             <input name="forWho" id="forWho" value="" style="display: none;">
-            <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="Name (*)" value="" required="">
-            <input type="text" name="contact" class="form-control input-control clearfix" placeholder="Contact" value="">
+            <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="昵称*" value="" required="">
+            <input type="text" name="contact" class="form-control input-control clearfix" placeholder="联系方式" value="">
 
-            <textarea name="content" id="textarea" class="form-control" placeholder="Your comment here. Be cool. " required=""></textarea>
+            <textarea name="content" id="textarea" class="form-control" placeholder="说点什么..." required=""></textarea>
             <button type="submit" class="submit" id="submit">SUBMIT</button>
         </form>
         <ol class="comment-list">
@@ -64,8 +62,8 @@
                         <div class="comment-header">
                             <img class="avatar" th:src="@{/images/user.png}" width="80" height="80">
                             <span class="comment-author">
-                                <a th:href="${parent.url}" target="_blank" rel="external nofollow">[[${parent.name}]]</a>
-                                <span>[[${parent.device}]]</span>
+                                <a th:href="${parent.url}" target="_blank" rel="external nofollow" style="font-size: 20px;">[[${parent.name}]] </a>
+                                <span style="margin-left: 10px; border: 1px solid #eee; border-radius: 5px; padding: 2px 2px 2px 2px;">[[${parent.device}]]</span>
                             </span>
                         </div>
                         <div class="comment-content">
@@ -89,8 +87,8 @@
                                     <div class="comment-header">
                                         <img class="avatar" th:src="@{/images/user.png}" width="80" height="80">
                                         <span class="comment-author">
-                                            <a th:href="${child.url}" target="_blank" rel="external nofollow">[[${child.name}]]</a>
-                                            <span>[[${child.device}]]</span>
+                                            <a th:href="${child.url}" target="_blank" rel="external nofollow" style="font-size: 20px;">[[${child.name}]]</a>
+                                            <span style="margin-left: 10px; border: 1px solid #eee; border-radius: 5px; padding: 2px 2px 2px 2px;">[[${child.device}]]</span>
                                         </span>
                                     </div>
                                     <div class="comment-content">

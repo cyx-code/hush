@@ -125,6 +125,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             map.put("count", comments.size());
             map.put("total", treeList.size());
             map.put("current", queryPage.getPage());
+            map.put("commentsCount", comments.size());
             int num = treeList.size() % queryPage.getLimit();
             int pages = num == 0 ? treeList.size() / queryPage.getLimit() : treeList.size() / queryPage.getLimit() + 1;
             map.put("pages", pages);

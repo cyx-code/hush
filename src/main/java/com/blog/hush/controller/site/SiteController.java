@@ -105,6 +105,7 @@ public class SiteController extends BaseController {
             model.addAttribute(SiteConstants.ARTICLE_MODEL, article);
             Map comments = commentService.listComments(queryPage, id, SiteConstants.COMMENT_SORT_ARTICLE);
             model.addAttribute(SiteConstants.COMMENTS_MODEL, comments);
+            model.addAttribute("commentsCount", comments.getOrDefault("commentsCount", 0));
             initModel(model);
             threadPool.execute(() -> {
                 LambdaUpdateWrapper<Article> wrapper = new LambdaUpdateWrapper<>();

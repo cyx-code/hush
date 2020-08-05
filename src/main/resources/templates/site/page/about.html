@@ -21,15 +21,14 @@
     </div>
     <div id="post-content" class="post-content"><h3>简介</h3>
         <p>欢迎来到我的博客</p>
-        <p>我是 cyx ，Java菜鸟一枚</p>
-        <p><a href="" target="_blank">Hush</a> 这是我的博客网站</p>
-        <p>以后会在这儿分享一些自己的学到的知识</p>
+        <p>以后会在这儿记录、分享一些自己的学到的知识</p>
         <p>该博客的源码在这👉<a href="https://github.com/cyx-code/hush" target="_blank">GitHub</a></p>
-        <P>希望可以动动你发财的小手点个star什么🌝，也欢迎fork，现在比较简单，以后会完善</P>
+        <P>如果喜欢的话，希望可以动动你发财的小手点个star🌝也欢迎fork</P>
+        <P>网站现在比较简单，以后会完善</P>
         <h3>关于我</h3>
         <p>社畜小开发一个</p>
-        <p>希望自己可以🐮🍺</p>
-        <p>如果你想跟我做朋友的话，必须欢迎，联系方式如下：</p>
+        <p>希望自己可以变的🐮🍺</p>
+        <p>👇是我的一些个人账号：</p>
         <ul>
             <li><p><a href="" target="_blank">Blog</a></p></li>
             <li><p><a href="https://github.com/cyx-code/" target="_blank">Github</a></p></li>
@@ -41,19 +40,19 @@
 
 <div id="respond-post-334" class="comment-container">
     <div id="comments" class="clearfix">
-        <span class="response" id="response">Responses
+        <span class="response" id="response">回复
             <span id="response-name" style="color: red"></span>
             <button id="cancel-comment-reply-link"
                     rel="nofollow" style="display:none"
-                    onclick="return cancelReply();"> / Cancel Reply</button>
+                    onclick="return cancelReply();"> / Cancel</button>
         </span>
         <form method="post" action="#" id="comment-form" class="comment-form" role="form">
             <input name="sort" value="2" style="display: none;">
             <input name="pid" id="pId" value="" style="display: none;">
             <input name="forWho" id="forWho" value="" style="display: none;">
-            <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="Name (*)" value="" required="">
-            <input type="text" name="contact" class="form-control input-control clearfix" placeholder="Contact" value="" >
-            <textarea name="content" id="textarea" class="form-control" placeholder="Your comment here. Be cool. " required=""></textarea>
+            <input type="text" name="name" maxlength="12" id="author" class="form-control input-control clearfix" placeholder="昵称*" value="" required="">
+            <input type="text" name="contact" class="form-control input-control clearfix" placeholder="联系方式" value="" >
+            <textarea name="content" id="textarea" class="form-control" placeholder="说点什么... " required=""></textarea>
             <button type="submit" class="submit" id="submit">SUBMIT</button>
         </form>
         <ol class="comment-list">
@@ -63,8 +62,8 @@
                         <div class="comment-header">
                             <img class="avatar" th:src="@{/images/user.png}" width="80" height="80">
                             <span class="comment-author">
-                                <a th:href="${parent.url}" target="_blank" rel="external nofollow">[[${parent.name}]]</a>
-                                <span>[[${parent.device}]]</span>
+                                <a th:href="${parent.url}" target="_blank" rel="external nofollow" style="font-size: 18px;">[[${parent.name}]]</a>
+                                <span style="margin-left: 10px; border: 1px solid #eee; border-radius: 5px; padding: 2px 2px 2px 2px;">[[${parent.device}]]</span>
                             </span>
                         </div>
                         <div class="comment-content">
@@ -88,8 +87,8 @@
                                     <div class="comment-header">
                                         <img class="avatar" th:src="@{/images/user.png}" width="80" height="80">
                                         <span class="comment-author">
-                                            <a th:href="${child.url}" target="_blank" rel="external nofollow">[[${child.name}]]</a>
-                                            <span>[[${child.device}]]</span>
+                                            <a th:href="${child.url}" target="_blank" rel="external nofollow" style="font-size: 18px;">[[${child.name}]]</a>
+                                            <span style="margin-left: 10px; border: 1px solid #eee; border-radius: 5px; padding: 2px 2px 2px 2px;">[[${child.device}]]</span>
                                         </span>
                                     </div>
                                     <div class="comment-content">

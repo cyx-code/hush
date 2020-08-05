@@ -21,10 +21,10 @@
             <div class="post-lists">
                 <div class="post-lists-body">
                     <div class="post-list-item" th:each="a : ${archive.articles}">
-                        <div class="post-list-item-container">
+                        <div class="post-list-item-container" th:onclick="changeHref('/article/' + [[${a.id}]]);";>
                             <div class="item-label">
                                 <div class="item-title">
-                                    <a th:href="'/article/' + ${a.id}" th:text="${a.title}"></a>
+                                    <a th:text="${a.title}"></a>
                                 </div>
                                 <div class="item-meta clearfix">
                                     <div class="item-meta-date">[[${a.day}]]</div>

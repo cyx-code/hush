@@ -1,23 +1,23 @@
 package com.blog.hush.common.utils;
 
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.level.Level;
-import org.apache.commons.io.FileUtils;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ClassPathResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lionsoul.ip2region.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 /**
  * IP工具类
  */
 public class IPUtil {
-    private static Log LOGGER = LogFactory.get(IPUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(IPUtil.class);
+
     private static final String UNKNOWN = "unknown";
-    private static final String PATH = IPUtil.class.getResource("/ip2region/ip2region.db").getPath();
 
     /**
      * 得到用户的真实ip地址
@@ -45,35 +45,39 @@ public class IPUtil {
      * @return
      */
     public static String getIpRegion(String ip) {
-        File file = new File(PATH);
-        if (!file.exists()) {
-            // 获取操作系统的临时目录
-            String tmpdir = System.getProperties().getProperty("java.io.tmpdir");
-            String path = tmpdir + "ip2region.db";
-            file = new File(path);
-            try {
-                // 复制文件到操作系统临时目录
-                FileUtils.copyInputStreamToFile(IPUtil.class.getClassLoader().getResourceAsStream("classpath:ip2region.db"), file);
-            } catch (IOException e) {
-                LOGGER.log(Level.ERROR, "将IP对应的区域文件复制到临时目录出现异常", e);
-            }
+        /**
+         * springboot 在打成jar后，不能直接对classpath下直接做文件操作，得通过stream操作文件
+         */
+        String tmpdir = System.getProperties().getProperty("java.io.tmpdir");
+        File file = new File(tmpdir + "ip2region.db");
+        try {
+            // 获得类路径下的文件
+            ClassPathResource resource = new ClassPathResource("ip2region/ip2region.db");
+            InputStream stream = resource.getStream();
+            FileUtil.writeFromStream(stream, file);
+        } catch (Exception e) {
+            LOGGER.error("获取文件出现异常", e);
         }
         try {
-            // 定义配置
-            DbConfig config = new DbConfig();
-            DbSearcher searcher = new DbSearcher(config, file.getPath());
-            // 使用反射定义方法，使用b树查询
-            Method method = searcher.getClass().getMethod("btreeSearch", String.class);
-            if ( Util.isIpAddress(ip) == false ) {
-                System.out.println("Error: Invalid ip address");
-                return "";
+            if (file != null) {
+                // 定义配置
+                DbConfig config = new DbConfig();
+                DbSearcher searcher = new DbSearcher(config, file.getPath());
+                // 使用反射定义方法，使用b树查询
+                Method method = searcher.getClass().getMethod("btreeSearch", String.class);
+                if (Util.isIpAddress(ip) == false) {
+                    System.out.println("Error: Invalid ip address");
+                    return "";
+                }
+                // 执行方法
+                DataBlock dataBlock = (DataBlock) method.invoke(searcher, ip);
+                searcher.close();
+                return dataBlock.getRegion();
+            } else {
+                LOGGER.info("文件未加载到");
             }
-            // 执行方法
-            DataBlock dataBlock = (DataBlock) method.invoke(searcher, ip);
-            searcher.close();
-            return dataBlock.getRegion();
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "查询ip地址区域出现异常", e);
+            LOGGER.error("查询ip地址区域出现异常", e);
         }
         return "";
     }

@@ -32,12 +32,9 @@
    java -jar hsuh.jar
    ```
 
-```
-   
 4. 访问localhost:8080和localhost:8080/admin（管理员账号admin/111111）
 
 ### 致谢
 
 - 感谢[chakhsu](https://github.com/chakhsu)的[pinghsu](https://github.com/chakhsu/pinghsu)主题
 - 感谢[zhongshaofa](https://github.com/zhongshaofa)开源的[layuimini](https://github.com/zhongshaofa/layuimini)后台管理模版
-```

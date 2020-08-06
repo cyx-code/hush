@@ -1,5 +1,6 @@
 package com.blog.hush.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.blog.hush.common.constants.enums.CommonEnum;
@@ -50,6 +51,12 @@ public class ArticleController extends BaseController {
     @DeleteMapping("/delete/{id}")
     public R delete(@PathVariable("id") Long id) {
         boolean result = articleService.delete(id);
+        return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
+    }
+
+    @PostMapping("/batchDel")
+    public R batchDelete(@RequestBody List<Long> ids){
+        boolean result = articleService.batchDelete(ids);
         return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
 }

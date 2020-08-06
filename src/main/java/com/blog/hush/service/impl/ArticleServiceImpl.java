@@ -10,6 +10,8 @@ import com.blog.hush.mapper.*;
 import com.blog.hush.service.ArticleService;
 import com.blog.hush.vo.Archive;
 import com.blog.hush.vo.ArticleVo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.SecurityUtils;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.*;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    private static final Log LOGGER = LogFactory.getLog(ArticleServiceImpl.class);
     @Resource
     private ArticleMapper articleMapper;
     @Resource
@@ -141,7 +145,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleTagMapper.batchInsert(articleTags);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("添加文章出现异常", e);
             return false;
         }
     }
@@ -211,7 +215,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("更新文章出现异常", e);
             return false;
         }
     }
@@ -231,10 +235,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleMapper.delete(articleWrapper);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("删除文章出现异常", e);
             return false;
         }
     }
+
+
+    @Override
+    @Transactional
+    public boolean batchDelete(List<Long> ids) {
+        try {
+            int tagCount = articleTagMapper.batchDeleteByArticle(ids);
+            int categoryCount = articleCategoryMapper.batchDeleteByArticle(ids);
+            int articleCount = articleMapper.deleteBatchIds(ids);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("批量删除文章出现异常", e);
+            return false;
+        }
+    }
+
 
     @Override
     public List<Archive> listGroupByMonth() {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,9 +31,11 @@ public class CommentController {
     @GetMapping
     public Map list(Long page, Long limit) {
         IPage<Comment> pageInfo = new Page<>(page, limit);
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(Comment::getTime);
         pageInfo.setCurrent(page);
         pageInfo.setSize(limit);
-        IPage<Comment> commentPage = commentService.page(pageInfo);
+        IPage<Comment> commentPage = commentService.page(pageInfo, wrapper);
         Map<String, Object> res = new HashMap<>();
         res.put("code", 0);
         res.put("msg", "success");
@@ -43,6 +46,12 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public R delete(@PathVariable Long id) {
         boolean result = commentService.deleteComments(id);
+        return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
+    }
+
+    @PostMapping("/batchDel")
+    public R batchDelete(@RequestBody List<Long> ids) {
+        boolean result = commentService.batchDelete(ids);
         return result ? new R(CommonEnum.COMMON_SUCCESS) : new R(CommonEnum.SYSTEM_ERROR);
     }
 }

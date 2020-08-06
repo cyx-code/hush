@@ -32,4 +32,6 @@ public interface ArticleService extends IService<Article> {
     List<Article> listByCondition(String condition);
 
     int sumHits();
+
+    boolean batchDelete(List<Long> ids);
 }

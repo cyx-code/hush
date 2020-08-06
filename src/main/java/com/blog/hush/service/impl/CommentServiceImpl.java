@@ -17,6 +17,7 @@ import com.blog.hush.service.CommentService;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,11 +73,27 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     @Transactional
     public boolean deleteComments(Long id) {
-        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Comment::getPId, id);
-        commentMapper.delete(wrapper);
-        commentMapper.deleteById(id);
-        return false;
+        try {
+            LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Comment::getPId, id);
+            commentMapper.delete(wrapper);
+            commentMapper.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public boolean batchDelete(List<Long> ids) {
+        try {
+            int count = commentMapper.deleteByPids(ids);
+            count = commentMapper.deleteBatchIds(ids);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

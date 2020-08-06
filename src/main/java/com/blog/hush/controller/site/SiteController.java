@@ -170,6 +170,7 @@ public class SiteController extends BaseController {
         model.addAttribute("condition", condition);
         List<Article> articles = articleService.listByCondition(condition);
         model.addAttribute("articles", articles);
+        initModel(model);
         return "site/page/search_page";
     }
     @GetMapping("/about")

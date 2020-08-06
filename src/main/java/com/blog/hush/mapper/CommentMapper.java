@@ -11,4 +11,6 @@ public interface CommentMapper extends BaseMapper<Comment> {
     List<Comment> findAll(@Param("state") String state, @Param("queryPage") QueryPage queryPage);
 
     List<Comment> listComments(@Param("queryPage") QueryPage queryPage);
+
+    int deleteByPids(List<Long> ids);
 }

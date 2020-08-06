@@ -145,6 +145,7 @@
                 ,{field:'state', hide: true}
                 ,{fixed:'right', title:'操作', toolbar: '#barDemo', width:150}
             ]],
+            id: 'articleTable',
             page: true,
             limit: 20
         });
@@ -155,7 +156,31 @@
             switch(obj.event){
                 case 'getCheckData':
                     var data = checkStatus.data;
-                    layer.alert(JSON.stringify(data));
+                    const ids = new Array();
+                    data.forEach(article => {
+                        ids.push(article.id);
+                    });
+                    if (ids.length > 0) {
+                        layer.confirm('确定删除吗？', function(index) {
+                            axios.post('/api/article/batchDel', ids).then(response => {
+                                if (response.data.code == 200) {
+                                    layer.alert('删除成功',{icon: 1, title: '提示'}, function (i) {
+                                        layer.close(i);
+                                        layer.close(index);//关闭弹出层
+                                    });
+                                    table.reload('articleTable',{//重载表格
+                                        page:{
+                                            curr:1
+                                        }
+                                    });
+                                } else {
+                                    layer.msg(response.data);
+                                }
+                            });
+                        });
+                    } else {
+                        layer.msg("至少选择一行");
+                    }
                     break;
                 //自定义头工具栏右侧图标 - 提示
                 case 'LAYTABLE_TIPS':
@@ -172,10 +197,20 @@
             var data = obj.data;
             if(obj.event === 'del'){
                 layer.confirm('真的删除行么', function(index){
-                    obj.del();
-                    layer.close(index);
                     axios.delete('/api/article/delete/'+data.id).then(response => {
-
+                        if (response.data.code == 200) {
+                            layer.alert('删除成功',{icon: 1, title: '提示'}, function (i) {
+                                layer.close(i);
+                                layer.close(index);//关闭弹出层
+                            });
+                            table.reload('articleTable',{//重载表格
+                                page:{
+                                    curr:1
+                                }
+                            })
+                        } else {
+                            layer.msg(response.data);
+                        }
                     })
                 });
             } else if(obj.event === 'edit'){
@@ -216,7 +251,7 @@
                                 layer.close(i);
                                 layer.close(index);//关闭弹出层
                             });
-                            table.reload('articles',{//重载表格
+                            table.reload('articleTable',{//重载表格
                                 page:{
                                     curr:1
                                 }

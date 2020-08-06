@@ -29,4 +29,14 @@
             time DESC
         LIMIT #{queryPage.page}, #{queryPage.limit}
     </select>
+
+    <delete id="deleteByPids" parameterType="long">
+        delete from tb_comment
+        <where>
+            p_id in
+            <foreach collection="list" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
 </mapper>

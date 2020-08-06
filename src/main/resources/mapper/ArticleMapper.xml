@@ -45,6 +45,7 @@
             tb_article a
             LEFT JOIN tb_article_category ac ON a.id = ac.article_id
             LEFT JOIN tb_category tc ON tc.id = ac.category_id
+        ORDER BY a.publish_time DESC
         LIMIT #{start},#{size}
 
     </select>

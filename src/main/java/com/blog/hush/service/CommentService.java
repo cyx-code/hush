@@ -19,4 +19,6 @@ public interface CommentService extends IService<Comment> {
     boolean deleteComments(Long id);
 
     List<Comment> listComments(QueryPage queryPage);
+
+    boolean batchDelete(List<Long> ids);
 }

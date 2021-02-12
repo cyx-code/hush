@@ -16,12 +16,12 @@
         select
             t.id,
             t.name,
-            ifnull( tt.count, 0 ) as count
+            ifnull( tt.count, 0 ) as `count`
         from
             tb_tag t
             left join ( select count(*) AS count, tag_id from tb_article_tag group by tag_id ) tt on t.id = tt.tag_id
         where
-            count != 0
+            `count` != 0
         order by count desc
     </select>
 

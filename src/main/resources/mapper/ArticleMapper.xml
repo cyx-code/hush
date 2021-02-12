@@ -81,6 +81,7 @@
             LEFT JOIN tb_category c on c.id = ac.category_id
         WHERE
             t.tag_id = #{tag}
+            and a.publish_time is not null
         ORDER BY
             a.publish_time DESC
     </select>

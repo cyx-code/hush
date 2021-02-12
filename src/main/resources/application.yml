@@ -3,8 +3,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/hush?setUnicode=true&characterEncoding=utf8
+    password: ENC(/zFDkd48Sk1JwrD7LjRJw9NgI8h4okFcm5fUMtp6RV1AA7T5j5BJNI6jCdiF/DhX)
+    url: jdbc:mysql://119.45.61.2:3306/hush?setUnicode=true&characterEncoding=utf8
   thymeleaf:
     cache: false
   profiles:
@@ -30,7 +30,7 @@ mybatis-plus:
 
 logging:
   level:
-    com.blog.hush.mapper: DEBUG
+    com.blog.hush.mapper: info
   file:
     path: /opt/apps/logs
 jasypt:

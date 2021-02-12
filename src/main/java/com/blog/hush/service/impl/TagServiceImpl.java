@@ -21,6 +21,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     private ArticleTagMapper articleTagMapper;
     @Override
     public List<Tag> listTags() {
+
         return tagMapper.listTags();
     }
 

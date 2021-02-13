@@ -13,16 +13,35 @@
         ta.id = #{id}
   </select>
     <select id="listTags" resultType="com.blog.hush.entity.Tag">
-        select
+        SELECT
             t.id,
-            t.name,
-            ifnull( tt.count, 0 ) as `count`
-        from
+            t.NAME,
+            ifnull( tt.`count`, 0 ) AS `count`
+        FROM
             tb_tag t
-            left join ( select count(*) AS count, tag_id from tb_article_tag group by tag_id ) tt on t.id = tt.tag_id
-        where
+            JOIN (
+            SELECT
+                count(*) AS `count`,
+                tag_id
+            FROM
+                tb_article_tag
+            WHERE
+                EXISTS (
+                SELECT
+                    id
+                FROM
+                    tb_article
+                WHERE
+                    state = 1
+                    AND id = tb_article_tag.article_id
+                )
+            GROUP BY
+                tag_id
+            ) tt ON t.id = tt.tag_id
+        WHERE
             `count` != 0
-        order by count desc
+        ORDER BY
+            `count` DESC
     </select>
 
     <select id="pageTags" resultType="com.blog.hush.entity.Tag">
